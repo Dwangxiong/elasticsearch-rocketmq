@@ -41,7 +41,7 @@ import com.lankr.dennisit.util.JsonUtil;
 import com.lankr.interceptor.MyInterceptor;
 import com.lankr.producer.Producer;
 import com.lankr.vo.Hospital;
-import com.lankr.vo.HospitalModel;
+import com.lankr.model.HospitalModel;
 
 @Controller
 public class ServerController extends BaseController{
@@ -99,7 +99,7 @@ public class ServerController extends BaseController{
 		}
 		
 		logger.info("rebuild 时间 ：" + new SimpleDateFormat("YYYY-MM-dd HH:ss:mm").format(new Date())) ;
-		return "rebuild OK count = " + counts ;
+		return "hospital rebuild OK count = " + counts ;
 	}
 	
 	

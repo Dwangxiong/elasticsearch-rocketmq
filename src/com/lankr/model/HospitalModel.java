@@ -1,4 +1,4 @@
-package com.lankr.vo;
+package com.lankr.model;
 
 public class HospitalModel {
 	private String address ;

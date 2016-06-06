@@ -34,7 +34,7 @@ import org.elasticsearch.search.SearchHits;
 import com.lankr.dennisit.util.JsonUtil;
 import com.lankr.mapping.CreateMapping;
 import com.lankr.vo.Hospital;
-import com.lankr.vo.HospitalModel;
+import com.lankr.model.HospitalModel;
 
 public class ElasticSearchHandler {
 

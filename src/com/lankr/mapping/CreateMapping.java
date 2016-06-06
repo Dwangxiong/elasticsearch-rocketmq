@@ -70,6 +70,56 @@ public class CreateMapping {
 		    putMappingRequest.source(mapping) ;
 		    System.out.println("开始mapping");
 		}
-	     
+	}
+	
+	public static void createMappingOnResource(String indexname, String type) throws IOException{
+	    //创建索引库 需要注意的是.setRefresh(true)这里一定要设置,否则第一次建立索引查找不到数据
+		
+		Map map = ElasticSearchHandler.instance().getClient().admin().cluster()  
+	            .health(new ClusterHealthRequest(indexname)).actionGet()  
+	            .getIndices() ;  
+		boolean exists = map.containsKey(indexname) ;
+		if (!exists) {
+				ElasticSearchHandler.instance().getClient().admin().indices().prepareCreate(indexname).execute().actionGet() ;
+			//设置分词器
+			 XContentBuilder mapping = XContentFactory.jsonBuilder()
+					 .startObject()  
+		                .startObject("settings")
+		                	.startObject("_source")  
+		                		.field("enabled", false)
+		                	.endObject()  
+		                    .startObject("properties")  
+		                    	.startObject("uuid")
+		                    		.field("type", "integer")
+		                    		.field("store", "no")
+		                    		.field("indexAnalyzer","ik")
+		                    		.field("analyzer", "ik")
+		                    		.field("searchAnalyzer", "ik")
+		                    	.endObject()  
+			                    .startObject("name")
+			                    	.field("type", "string")
+			                    	.field("store", "no")
+			                    	.field("indexAnalyzer","ik")
+			                    	.field("analyzer", "ik")
+			                    	.field("searchAnalyzer", "ik")
+			                    .endObject()  
+			                    .startObject("address")
+			                    	.field("type", "string")
+			                    	.field("store", "no")
+			                    	.field("indexAnalyzer","ik")
+			                    	.field("analyzer", "ik")
+			                    	.field("searchAnalyzer", "ik")
+			                    .endObject()
+		                    .endObject()
+		                .endObject()  
+		            .endObject()  ;  
+		    
+		    
+		  //建立mapping
+		    PutMappingRequest putMappingRequest = Requests.putMappingRequest(indexname) ;
+		    putMappingRequest.type(type) ;
+		    putMappingRequest.source(mapping) ;
+		    System.out.println("开始mapping");
+		}
 	}
 }
