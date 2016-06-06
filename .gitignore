@@ -1,0 +1,15 @@
+target/
+build/
+.settings
+.project
+tv_cloud_server*
+src/java/main/jdbc.properties
+
+*.log
+.gitignore.swp
+temp/
+cloud.iml
+src/main/resources/config.properties
+/bin
+.classpath
+

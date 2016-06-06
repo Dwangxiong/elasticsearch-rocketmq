@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<button onclick="getESData()">点击吧</button><input type="text" id="keyword" name="keyword" /><br />
+	<div id="data">
+	</div>
+	<script type="text/javascript" src="/js/jquery-2.1.1.js"></script>
+	<script type="text/javascript">
+		function getESData() {
+			alert(1);
+			var keyword = $('#keyword').val() ;
+			alert(keyword)
+			$.get('http://localhost:8899/api/search',{
+					keyword:keyword
+				},function(data){
+					console.log(data) ;
+				})
+		}
+	</script>
+</body>
+</html>
