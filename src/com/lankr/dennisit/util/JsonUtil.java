@@ -20,6 +20,7 @@ public class JsonUtil {
             //使用XContentBuilder创建json数据
             XContentBuilder jsonBuild = XContentFactory.jsonBuilder();
             jsonBuild.startObject()
+            .field("id", hospital.getId())
             .field("uuid",hospital.getUuid())
             .field("name", hospital.getName())
             .field("address",hospital.getAddress())
