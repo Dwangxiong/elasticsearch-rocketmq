@@ -1,24 +1,24 @@
 package com.lankr.vo;
 
 public class HospitalModel {
-	private int id ;
+	private String address ;
 	private String uuid ;
 	private String name ;
 	
 	public HospitalModel() {};
 	
-	public HospitalModel(int id, String uuid, String name) {
+	public HospitalModel(String uuid, String name, String address) {
 		this() ;
-		this.setId(id) ;
+		this.setAddress(address) ;
 		this.setUuid(uuid) ;
 		this.setName(name) ;
 	}
 	
-	public int getId() {
-		return id;
+	public String getAdress() {
+		return address;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	public String getUuid() {
 		return uuid;

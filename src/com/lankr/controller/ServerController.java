@@ -67,7 +67,7 @@ public class ServerController extends BaseController{
 			queryBuilder = QueryBuilders.matchAllQuery() ;
 			hospitalModels = esHandler.searcher(queryBuilder, "zhiliao", "hospital") ;
 		} else { 
-			queryBuilder = QueryBuilders.multiMatchQuery(keyword, "name", "pinyin") ;
+			queryBuilder = QueryBuilders.matchQuery( "name", keyword ) ;
 			hospitalModels = esHandler.searcher(queryBuilder, "zhiliao", "hospital") ;
 		}
 		System.out.println("search-------------------"+hospitalModels.size()) ;

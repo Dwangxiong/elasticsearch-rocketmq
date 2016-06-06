@@ -166,10 +166,10 @@ public class ElasticSearchHandler {
 	        System.out.println("实际的数量" + searchHits.length);
 	        if(searchHits.length>0){
 	            for(SearchHit hit:searchHits){
-	                Integer id = (Integer)hit.getSource().get("id");
-	                String uuid =  (String) hit.getSource().get("uuid");
+	                String uuid = (String)hit.getSource().get("uuid");
 	                String name =  (String) hit.getSource().get("name");
-	                list.add(new HospitalModel(id, uuid, name));
+	                String address =  (String) hit.getSource().get("address");
+	                list.add(new HospitalModel(uuid, name, address));
 	            }
 	        }
 	        return list;
