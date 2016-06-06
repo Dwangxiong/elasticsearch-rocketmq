@@ -63,7 +63,7 @@
 		<constructor-arg index="0" ref="sqlSessionFactory" />
 	</bean>
 	<bean id="hospitalMgrFacade" class="com.lankr.service.facadeImpl.HospitalMgrFacadeImpl" />
-	<bean id="baseController" class="com.lankr.controller.BaseController"/>
+	<bean id="resourceMgrFacade" class="com.lankr.service.facadeImpl.ResourceMgrFacadeImpl" />
 </beans>
 
 

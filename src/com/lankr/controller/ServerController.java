@@ -40,8 +40,10 @@ import com.lankr.dennisit.entity.process.ElasticSearchHandler;
 import com.lankr.dennisit.util.JsonUtil;
 import com.lankr.interceptor.MyInterceptor;
 import com.lankr.model.Hospital;
+import com.lankr.model.Resource;
 import com.lankr.producer.Producer;
 import com.lankr.vo.HospitalVO;
+import com.lankr.vo.ResourceVO;
 
 @Controller
 public class ServerController extends BaseController{
@@ -54,8 +56,8 @@ public class ServerController extends BaseController{
 	public List<HospitalVO> search(HttpServletRequest request,  
             HttpServletResponse response,ModelMap model) throws UnsupportedEncodingException {
 		response.setHeader("Access-Control-Allow-Origin", "*") ;
-		request.setCharacterEncoding("UTF-8") ;
-		response.setCharacterEncoding("UTF-8") ;
+		//request.setCharacterEncoding("UTF-8") ;
+		//response.setCharacterEncoding("UTF-8") ;
 		
 		String keyword = request.getParameter("keyword") ;
 		
@@ -79,11 +81,11 @@ public class ServerController extends BaseController{
 	public String rebuildHospital(HttpServletRequest request,  
             HttpServletResponse response,ModelMap model) throws UnsupportedEncodingException {
 		
-		request.setCharacterEncoding("UTF-8") ;
-		response.setCharacterEncoding("UTF-8") ;
+		//request.setCharacterEncoding("UTF-8") ;
+		//response.setCharacterEncoding("UTF-8") ;
 		
-		List<Hospital> hospitals = this.getAllHospital(0, 50) ;
-		esHandler.deleteIndex("zhiliao") ;
+		List<Hospital> hospitals = this.selectAllHospital(0, 50) ;
+		//esHandler.deleteIndex("zhiliao","hospital") ;
 		int counts = 0 ;
 		while (hospitals.size() != 0) {
 			counts += hospitals.size() ;
@@ -95,14 +97,53 @@ public class ServerController extends BaseController{
 				String uuid = hospital.getUuid() ;
 				esHandler.createIndexResponse("zhiliao", "hospital", uuid, JsonUtil.obj2JsonData(hospital)) ;
 			}
-			hospitals = this.getAllHospital(id, 50) ;
+			hospitals = this.selectAllHospital(id, 50) ;
 		}
 		
-		logger.info("rebuild 时间 ：" + new SimpleDateFormat("YYYY-MM-dd HH:ss:mm").format(new Date())) ;
+		logger.info("hospital rebuild 时间 ：" + new SimpleDateFormat("YYYY-MM-dd HH:ss:mm").format(new Date())) ;
 		return "hospital rebuild OK count = " + counts ;
 	}
 	
+	@ResponseBody
+	@RequestMapping("/api/rebuild/resource")
+	public String rebuildResource(HttpServletRequest request,  
+            HttpServletResponse response,ModelMap model) throws UnsupportedEncodingException {
+		
+		request.setCharacterEncoding("UTF-8") ;
+		response.setCharacterEncoding("UTF-8") ;
+		
+		List<Resource> resources = resourceMgrFacade.selectAllResource(0, 50) ;
+		//esHandler.deleteIndex("zhiliao","resource") ;
+		int counts = 0 ;
+		while (resources.size() != 0) {
+			counts += resources.size() ;
+			int id = resources.get(resources.size()-1).getId() ;
+			System.out.println(id);
+			Iterator iterator = resources.iterator() ;
+			while (iterator.hasNext()) {
+				Resource resource = (Resource) iterator.next() ;
+				String uuid = resource.getUuid() ;
+				esHandler.createIndexResponse("zhiliao", "resource", uuid, JsonUtil.obj2JsonData(resource)) ;
+			}
+			resources = resourceMgrFacade.selectAllResource(id, 50) ;
+		}
+		
+		logger.info("resource rebuild 时间 ：" + new SimpleDateFormat("YYYY-MM-dd HH:ss:mm").format(new Date())) ;
+		return "resource rebuild OK count = " + counts ;
+	}
 	
+	@ResponseBody
+	@RequestMapping("/api/rebuild/all")
+	public String rebuildAll(HttpServletRequest request,  
+            HttpServletResponse response,ModelMap model) throws UnsupportedEncodingException {
+		
+		esHandler.deleteIndex("zhiliao") ;
+		logger.info("all rebuild 时间 ：" + new SimpleDateFormat("YYYY-MM-dd HH:ss:mm").format(new Date())) ;
+		return "all is deleted " ;
+	}
+	
+	
+
 	public static void main(String[] args) throws IOException {
 //		while (true) {
 //	        String url="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx682e0d50713af910&secret=12b2858d8754520941ba6f95bfd7f958" ;

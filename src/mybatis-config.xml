@@ -19,11 +19,13 @@
 
 	<!-- 元素类型为 "typeAliases" 的内容必须匹配 "(typeAlias*,package*) 顺序必须一致 -->
 	<typeAliases>
-		<typeAlias alias="hospital" type="com.lankr.vo.Hospital" />
+		<typeAlias alias="hospital" type="com.lankr.model.Hospital" />
+		<typeAlias alias="resource" type="com.lankr.model.Resource" />
 	</typeAliases>
 
 	<mappers>
 		<mapper resource="com/lankr/mybatis/hospital.xml" />
+		<mapper resource="com/lankr/mybatis/resource.xml" />
 		
 	</mappers>
 	

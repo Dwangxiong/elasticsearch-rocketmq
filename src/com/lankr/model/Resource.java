@@ -2,10 +2,19 @@ package com.lankr.model;
 
 import java.util.Date;
 
-public class Reource {
+public class Resource {
 	private int id;
 	private Date createDate;
 	private Date modifyDate;
+	private String name ;
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	private String uuid;
 	private String pinyin;
 	private int rank;

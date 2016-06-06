@@ -14,6 +14,7 @@ import org.elasticsearch.action.admin.indices.get.GetIndexRequest;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuilder;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
+import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexRequestBuilder;
@@ -223,6 +224,26 @@ public class ElasticSearchHandler {
 	    	
 	    }
 	    
+//	    /**
+//	     * 执行删除type
+//	     * @param id
+//	     * @param indexname
+//	     * @param type
+//	     */
+//	    public void deleteType (String indexname,String type) {
+//	    	
+//	    	//删除前要确保索引存在,否则会报错
+//	    	Map map = client.admin().cluster()  
+//                    .health(new ClusterHealthRequest(indexname)).actionGet()  
+//                    .getIndices() ;  
+//	    	boolean exists = map.containsKey(indexname) ;
+//	    	if (!exists)
+//				return ;
+//	    	DeleteRequest request = new DeleteRequest() ; 
+//	    	client.prepareDelete().setIndex(indexname).setType(type).execute().actionGet() ;
+//	    	
+//	    }
+	    
 	    /**
 	     * 执行更新数据
 	     * @param hospital
@@ -298,6 +319,8 @@ public class ElasticSearchHandler {
 	    
 	    
 	    public static void main(String[] args) throws IOException {
+	    	//ElasticSearchHandler eh = new ElasticSearchHandler() ;
+	    	//eh.deleteType("zhiliao","resource") ;
 //	        ElasticSearchHandler esHandler = new ElasticSearchHandler();
 //	        List<String> jsondata = DataFactory.getInitJsonData();
 //	        String indexname = "indexdemo";
