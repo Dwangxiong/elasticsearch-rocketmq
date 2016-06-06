@@ -15,8 +15,8 @@ import com.alibaba.rocketmq.common.message.MessageExt;
 import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
 import com.lankr.dennisit.entity.process.ElasticSearchHandler;
 import com.lankr.dennisit.util.JsonUtil;
+import com.lankr.model.Hospital;
 import com.lankr.producer.Producer;
-import com.lankr.vo.Hospital;
 
 public class Consumer implements Runnable{
 	

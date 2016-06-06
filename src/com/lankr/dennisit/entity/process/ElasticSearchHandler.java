@@ -33,8 +33,8 @@ import org.elasticsearch.search.SearchHits;
 
 import com.lankr.dennisit.util.JsonUtil;
 import com.lankr.mapping.CreateMapping;
-import com.lankr.vo.Hospital;
-import com.lankr.model.HospitalModel;
+import com.lankr.model.Hospital;
+import com.lankr.vo.HospitalVO;
 
 public class ElasticSearchHandler {
 
@@ -141,7 +141,7 @@ public class ElasticSearchHandler {
 	     * @param type
 	     * @return
 	     */
-	    public List<HospitalModel>  searcher(QueryBuilder queryBuilder, String indexname, String type){
+	    public List<HospitalVO>  searcher(QueryBuilder queryBuilder, String indexname, String type){
 	    	//查询前，没有索引则创建
 	    	Map map = client.admin().cluster()  
                     .health(new ClusterHealthRequest(indexname)).actionGet()  
@@ -154,7 +154,7 @@ public class ElasticSearchHandler {
 					e.printStackTrace();
 				}
 	    	
-	        List<HospitalModel> list = new ArrayList<HospitalModel>();
+	        List<HospitalVO> list = new ArrayList<HospitalVO>();
 	        SearchResponse searchResponse = client.prepareSearch(indexname).setTypes(type)
 	        //此处可以设置返回数据的数量
 	        .setQuery(queryBuilder).setSize(50)
@@ -170,7 +170,7 @@ public class ElasticSearchHandler {
 	                String uuid = (String)hit.getSource().get("uuid");
 	                String name =  (String) hit.getSource().get("name");
 	                String address =  (String) hit.getSource().get("address");
-	                list.add(new HospitalModel(id, uuid, name, address));
+	                list.add(new HospitalVO(id, uuid, name, address));
 	            }
 	        }
 	        return list;
@@ -249,7 +249,7 @@ public class ElasticSearchHandler {
 	    	
 	    	UpdateRequest updateRequest = new UpdateRequest(indexname, type, uuid) ;
 	    	QueryBuilder queryBuilder = QueryBuilders.termQuery("uuid", uuid) ;
-	    	List<HospitalModel> hospitals = searcher(queryBuilder, indexname, type) ;
+	    	List<HospitalVO> hospitals = searcher(queryBuilder, indexname, type) ;
 	    	if (hospitals.size() < 1) {
 	    		createIndexResponse(indexname, type, uuid, JsonUtil.obj2JsonData(hospital)) ;
 	    		return ;

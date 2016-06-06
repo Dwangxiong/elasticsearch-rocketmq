@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 
-import com.lankr.vo.Hospital;
+import com.lankr.model.Hospital;
 
 public class JsonUtil {
 

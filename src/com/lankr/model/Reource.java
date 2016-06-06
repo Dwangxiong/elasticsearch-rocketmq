@@ -1,4 +1,4 @@
-package com.lankr.vo;
+package com.lankr.model;
 
 import java.util.Date;
 

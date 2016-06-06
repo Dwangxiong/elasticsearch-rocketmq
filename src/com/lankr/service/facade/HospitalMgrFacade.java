@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.lankr.vo.Hospital;
+import com.lankr.model.Hospital;
 
 public interface HospitalMgrFacade {
 	public List<Hospital> selectAllHospital(int id, int size);

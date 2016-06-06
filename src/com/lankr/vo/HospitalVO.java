@@ -1,15 +1,15 @@
-package com.lankr.model;
+package com.lankr.vo;
 
-public class HospitalModel {
+public class HospitalVO {
 	
 	private int id ;
 	private String address ;
 	private String uuid ;
 	private String name ;
 	
-	public HospitalModel() {};
+	public HospitalVO() {};
 	
-	public HospitalModel(int id, String uuid, String name, String address) {
+	public HospitalVO(int id, String uuid, String name, String address) {
 		this() ;
 		this.setId(id) ;
 		this.setAddress(address) ;

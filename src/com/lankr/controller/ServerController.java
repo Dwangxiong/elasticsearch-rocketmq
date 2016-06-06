@@ -39,9 +39,9 @@ import com.alibaba.rocketmq.common.message.Message;
 import com.lankr.dennisit.entity.process.ElasticSearchHandler;
 import com.lankr.dennisit.util.JsonUtil;
 import com.lankr.interceptor.MyInterceptor;
+import com.lankr.model.Hospital;
 import com.lankr.producer.Producer;
-import com.lankr.vo.Hospital;
-import com.lankr.model.HospitalModel;
+import com.lankr.vo.HospitalVO;
 
 @Controller
 public class ServerController extends BaseController{
@@ -51,7 +51,7 @@ public class ServerController extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping("/api/search")
-	public List<HospitalModel> search(HttpServletRequest request,  
+	public List<HospitalVO> search(HttpServletRequest request,  
             HttpServletResponse response,ModelMap model) throws UnsupportedEncodingException {
 		response.setHeader("Access-Control-Allow-Origin", "*") ;
 		request.setCharacterEncoding("UTF-8") ;
@@ -60,18 +60,18 @@ public class ServerController extends BaseController{
 		String keyword = request.getParameter("keyword") ;
 		
 		QueryBuilder queryBuilder = null ;
-		List<HospitalModel> hospitalModels = null ;
+		List<HospitalVO> hospitalVOs = null ;
 		logger.info("用户查询关键字：" + keyword);
 		
 		if (keyword == null || keyword == "") {
 			queryBuilder = QueryBuilders.matchAllQuery() ;
-			hospitalModels = esHandler.searcher(queryBuilder, "zhiliao", "hospital") ;
+			hospitalVOs = esHandler.searcher(queryBuilder, "zhiliao", "hospital") ;
 		} else { 
 			queryBuilder = QueryBuilders.matchQuery( "name", keyword ) ;
-			hospitalModels = esHandler.searcher(queryBuilder, "zhiliao", "hospital") ;
+			hospitalVOs = esHandler.searcher(queryBuilder, "zhiliao", "hospital") ;
 		}
-		System.out.println("search-------------------"+hospitalModels.size()) ;
-		return hospitalModels ;
+		System.out.println("search-------------------"+hospitalVOs.size()) ;
+		return hospitalVOs ;
 	}
 	
 	@ResponseBody

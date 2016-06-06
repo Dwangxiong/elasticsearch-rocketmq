@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lankr.dennisit.util.JsonUtil;
-import com.lankr.vo.Hospital;
+import com.lankr.model.Hospital;
 
 public class DataFactory {
 
