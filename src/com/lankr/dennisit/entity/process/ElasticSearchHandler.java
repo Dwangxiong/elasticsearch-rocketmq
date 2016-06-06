@@ -241,9 +241,9 @@ public class ElasticSearchHandler {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-	    	int id = hospital.getId() ;
 	    	String uuid = hospital.getUuid() ;
 	    	String name = hospital.getName() ;
+	    	String address = hospital.getAddress() ;
 	    	
 	    	UpdateRequest updateRequest = new UpdateRequest(indexname, type, uuid) ;
 	    	QueryBuilder queryBuilder = QueryBuilders.termQuery("uuid", uuid) ;
@@ -253,25 +253,25 @@ public class ElasticSearchHandler {
 	    		return ;
 	    	}
 	    	try {
-		    	if (id !=0) {
+		    	if (uuid != null) {
 					updateRequest.doc(XContentFactory.jsonBuilder()
 							.startObject()
-								.field("id",id)
+								.field("uuid",uuid)
 							.endObject()
 							);
 					
-		    	}
-		    	if (uuid != null){
-			    	updateRequest.doc(XContentFactory.jsonBuilder()
-			    			.startObject()
-			    				.field("uuid",uuid)
-			    			.endObject()
-			    			);
 		    	}
 		    	if (name != null){
 			    	updateRequest.doc(XContentFactory.jsonBuilder()
 			    			.startObject()
 			    				.field("name",name)
+			    			.endObject()
+			    			);
+		    	}
+		    	if (address != null){
+			    	updateRequest.doc(XContentFactory.jsonBuilder()
+			    			.startObject()
+			    				.field("address",address)
 			    			.endObject()
 			    			);
 		    	}

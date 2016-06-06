@@ -161,9 +161,9 @@ public class Consumer implements Runnable{
 		System.out.println(content);
 		String[] temp = content.split(":") ;
 		Hospital hospital = new Hospital() ;
-		hospital.setId(Integer.parseInt(temp[0])) ;
-		hospital.setUuid(temp[1]) ;
-		hospital.setName(temp[2]) ;
+		hospital.setUuid(temp[0]) ;
+		hospital.setName(temp[1]) ;
+		hospital.setAddress(temp[2]) ;
 		return hospital ;
 	}
 }
