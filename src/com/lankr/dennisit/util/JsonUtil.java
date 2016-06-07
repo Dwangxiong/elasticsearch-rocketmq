@@ -1,12 +1,19 @@
 package com.lankr.dennisit.util;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.elasticsearch.common.xcontent.ToXContent;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 
 import com.lankr.model.Hospital;
 import com.lankr.model.Resource;
+import com.lankr.model.Speaker;
+import com.lankr.vo.CategoryVO;
+import com.lankr.vo.ResourceVO;
+import com.lankr.vo.SpeakerVO;
 
 public class JsonUtil {
 
@@ -34,17 +41,20 @@ public class JsonUtil {
         return jsonData;
     }
     
-    public static String obj2JsonData(Resource resource){
+    public static String obj2JsonData(ResourceVO resourceVO){
         String jsonData = null;
         try {
             //使用XContentBuilder创建json数据
             XContentBuilder jsonBuild = XContentFactory.jsonBuilder();
+            
             jsonBuild.startObject()
-            .field("id", resource.getId())
-            .field("uuid",resource.getUuid())
-            .field("name", resource.getName())
-            .field("coverTaskId",resource.getCoverTaskId())
-            .field("speakerId", resource.getSpeakerId())
+            .field("id", resourceVO.getId())
+            .field("uuid",resourceVO.getUuid())
+            .field("name", resourceVO.getName())
+            .field("code",resourceVO.getCode())
+            .field("mark", resourceVO.getMark())
+            .field("speakers", JsonUtil.parseSpeaker(resourceVO.getSpeaker()))
+            .field("categorys", JsonUtil.parseCategory(resourceVO.getCategory()))
             .endObject();
             jsonData = jsonBuild.string();
             System.out.println(jsonData);
@@ -53,4 +63,41 @@ public class JsonUtil {
         }
         return jsonData;
     }
+
+	private static String parseSpeaker(SpeakerVO speaker) {
+		 XContentBuilder jsonBuild;
+		 String jsonData = null ;
+		try {
+			jsonBuild = XContentFactory.jsonBuilder();
+			jsonBuild.startObject()
+            .field("id", speaker.getId())
+            .field("uuid",speaker.getUuid())
+            .field("name", speaker.getName())
+            .endObject();
+            jsonData = jsonBuild.string();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	            
+		
+		return jsonData ;
+	}
+	
+	private static String parseCategory(CategoryVO category) {
+		 XContentBuilder jsonBuild ;
+		 String jsonData = null ;
+		try {
+			jsonBuild = XContentFactory.jsonBuilder();
+			jsonBuild.startObject()
+            .field("id", category.getId())
+            .field("uuid",category.getUuid())
+            .field("name", category.getName())
+            .endObject();
+            jsonData = jsonBuild.string();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	            
+		return jsonData ;
+	}
 }

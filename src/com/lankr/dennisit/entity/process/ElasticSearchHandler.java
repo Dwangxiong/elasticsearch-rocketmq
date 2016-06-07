@@ -318,6 +318,7 @@ public class ElasticSearchHandler {
 
 	public static void main(String[] args) throws IOException {
 		ElasticSearchHandler esHandler = new ElasticSearchHandler();
+		esHandler.createIndexResponse("zhiliao", "resource", "hjdjfjhdf", "{\"}") ;
 		// esHandler.deleteType("zhiliao", "resource") ;
 		// boolean exists =
 		// esHandler.client.admin().indices().prepareTypesExists().setTypes("resource").execute().actionGet().isExists();

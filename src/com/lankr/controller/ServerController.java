@@ -44,8 +44,10 @@ import com.lankr.interceptor.MyInterceptor;
 import com.lankr.model.Hospital;
 import com.lankr.model.Resource;
 import com.lankr.producer.Producer;
+import com.lankr.vo.CategoryVO;
 import com.lankr.vo.HospitalVO;
 import com.lankr.vo.ResourceVO;
+import com.lankr.vo.SpeakerVO;
 
 @Controller
 public class ServerController extends BaseController{
@@ -134,6 +136,7 @@ public class ServerController extends BaseController{
 		
 		List<Resource> resources = resourceMgrFacade.selectAllResource(0, 50) ;
 		int counts = 0 ;
+		ResourceVO resourceVO = new ResourceVO() ;
 		while (resources.size() != 0) {
 			counts += resources.size() ;
 			int id = resources.get(resources.size()-1).getId() ;
@@ -142,7 +145,12 @@ public class ServerController extends BaseController{
 			while (iterator.hasNext()) {
 				Resource resource = (Resource) iterator.next() ;
 				String uuid = resource.getUuid() ;
-				esHandler.createIndexResponse("zhiliao", "resource", uuid, JsonUtil.obj2JsonData(resource)) ;
+				resourceVO.setId(resource.getId()) ;
+				resourceVO.setUuid(resource.getUuid()) ;
+				resourceVO.setName(resource.getName()) ;
+				resourceVO.setSpeaker(new SpeakerVO(resource.getSpeaker().getId(),resource.getSpeaker().getUuid(),resource.getSpeaker().getName()));
+				resourceVO.setCategory(new CategoryVO(resource.getCategory().getId(),resource.getCategory().getUuid(),resource.getCategory().getName()));
+				esHandler.createIndexResponse("zhiliao", "resource", uuid, JsonUtil.obj2JsonData(resourceVO)) ;
 			}
 			resources = resourceMgrFacade.selectAllResource(id, 50) ;
 		}

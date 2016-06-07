@@ -20,11 +20,13 @@
 		<result property="pdfId" column="pdfId" />
 		<result property="newsId" column="newsId" />
 		<result property="threeScreenId" column="threeScreenId" />
-		<result property="categoryId" column="categoryId" />
-		<result property="speakerId" column="speakerId" />
 		<result property="status" column="status" />
 		<result property="mark" column="mark" />
 		<result property="code" column="code" />
+		<association property="category" column="categoryId"
+			select="com.lankr.mybatis,mapper.CategoryMapper.selectById" />
+		<association property="speaker" select="com.lankr.mybatis.mapper.SpeakerMapper.selectById"
+			column="speakerId" />
 	</resultMap>
 
 

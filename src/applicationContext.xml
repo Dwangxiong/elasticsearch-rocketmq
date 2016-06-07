@@ -64,6 +64,8 @@
 	</bean>
 	<bean id="hospitalMgrFacade" class="com.lankr.service.facadeImpl.HospitalMgrFacadeImpl" />
 	<bean id="resourceMgrFacade" class="com.lankr.service.facadeImpl.ResourceMgrFacadeImpl" />
+	<bean id="resourceMgrFacade" class="com.lankr.service.facadeImpl.SpeakerMgrFacadeImpl" />
+	<bean id="resourceMgrFacade" class="com.lankr.service.facadeImpl.CategoryMgrFacadeImpl" />
 </beans>
 
 

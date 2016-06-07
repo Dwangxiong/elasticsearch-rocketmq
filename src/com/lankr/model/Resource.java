@@ -133,22 +133,6 @@ public class Resource {
 		this.threeScreenId = threeScreenId;
 	}
 
-	public int getCategoryId() {
-		return categoryId;
-	}
-
-	public void setCategoryId(int categoryId) {
-		this.categoryId = categoryId;
-	}
-
-	public int getSpeakerId() {
-		return speakerId;
-	}
-
-	public void setSpeakerId(int speakerId) {
-		this.speakerId = speakerId;
-	}
-
 	public int getStatus() {
 		return status;
 	}
@@ -187,8 +171,24 @@ public class Resource {
 	private int pdfId;
 	private int newsId;
 	private int threeScreenId;
-	private int categoryId;
-	private int speakerId;
+	private Speaker speaker;
+	private Category category;
+	public Speaker getSpeaker() {
+		return speaker;
+	}
+
+	public void setSpeaker(Speaker speaker) {
+		this.speaker = speaker;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
 	private int status;
 	private int isActive;
 	private String mark;

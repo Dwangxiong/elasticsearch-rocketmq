@@ -21,11 +21,15 @@
 	<typeAliases>
 		<typeAlias alias="hospital" type="com.lankr.model.Hospital" />
 		<typeAlias alias="resource" type="com.lankr.model.Resource" />
+		<typeAlias alias="speaker" type="com.lankr.model.Speaker" />
+		<typeAlias alias="category" type="com.lankr.model.Category" />
 	</typeAliases>
 
 	<mappers>
 		<mapper resource="com/lankr/mybatis/hospital.xml" />
 		<mapper resource="com/lankr/mybatis/resource.xml" />
+		<mapper resource="com/lankr/mybatis/speaker.xml" />
+		<mapper resource="com/lankr/mybatis/category.xml" />
 		
 	</mappers>
 	

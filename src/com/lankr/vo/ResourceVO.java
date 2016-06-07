@@ -1,11 +1,49 @@
 package com.lankr.vo;
 
+import java.util.List;
+
+import com.lankr.model.Speaker;
+
 public class ResourceVO {
 	private int id ;
 	private String uuid ;
 	private String name ;
-	private String coverTaskId ;
-	private int speakerId;
+	private String code ;
+	private String mark ;
+	private SpeakerVO speaker ;
+	private CategoryVO category ;
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getMark() {
+		return mark;
+	}
+
+	public void setMark(String mark) {
+		this.mark = mark;
+	}
+
+	public SpeakerVO getSpeaker() {
+		return speaker;
+	}
+
+	public void setSpeaker(SpeakerVO speaker) {
+		this.speaker = speaker;
+	}
+
+	public CategoryVO getCategory() {
+		return category;
+	}
+
+	public void setCategory(CategoryVO category) {
+		this.category = category;
+	}
 
 	public int getId() {
 		return id;
@@ -31,19 +69,4 @@ public class ResourceVO {
 		this.name = name;
 	}
 
-	public String getCoverTaskId() {
-		return coverTaskId;
-	}
-
-	public void setCoverTaskId(String coverTaskId) {
-		this.coverTaskId = coverTaskId;
-	}
-
-	public int getSpeakerId() {
-		return speakerId;
-	}
-
-	public void setSpeakerId(int speakerId) {
-		this.speakerId = speakerId;
-	}
 }
