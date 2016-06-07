@@ -35,8 +35,13 @@ import org.elasticsearch.search.SearchHits;
 
 import com.lankr.dennisit.util.JsonUtil;
 import com.lankr.mapping.CreateMapping;
+import com.lankr.model.Category;
 import com.lankr.model.Hospital;
+import com.lankr.model.Speaker;
+import com.lankr.vo.CategoryVO;
 import com.lankr.vo.HospitalVO;
+import com.lankr.vo.ResourceVO;
+import com.lankr.vo.SpeakerVO;
 
 public class ElasticSearchHandler {
 
@@ -318,32 +323,20 @@ public class ElasticSearchHandler {
 
 	public static void main(String[] args) throws IOException {
 		ElasticSearchHandler esHandler = new ElasticSearchHandler();
-		esHandler.createIndexResponse("zhiliao", "resource", "hjdjfjhdf", "{\"}") ;
-		// esHandler.deleteType("zhiliao", "resource") ;
-		// boolean exists =
-		// esHandler.client.admin().indices().prepareTypesExists().setTypes("resource").execute().actionGet().isExists();
-		// System.out.println(exists);
-		// ElasticSearchHandler esHandler = new ElasticSearchHandler();
-		// List<String> jsondata = DataFactory.getInitJsonData();
-		// String indexname = "indexdemo";
-		// String type = "typedemo";
-		// esHandler.createIndexResponse(indexname, type, jsondata);
-		// //查询条件
-		// QueryBuilder queryBuilder = QueryBuilders.queryStringQuery("hello");
-		// /*QueryBuilder queryBuilder = QueryBuilders.boolQuery()
-		// .must(QueryBuilders.termQuery("id", 1));*/
-		// List<Hospital> result = esHandler.searcher(queryBuilder, indexname,
-		// type);
-		// for(int i=0; i<result.size(); i++){
-		// Hospital medicine = result.get(i);
-		// //System.out.println("(" + medicine.getId() + ")药品名称:"
-		// +medicine.getName() + "\t\t" + medicine.getFunction());
-		// }
-		// boolean flag = esHandler.delete(indexname, type, "abc10") ;
-		// if (flag)
-		// System.out.println("删除成功") ;
-		// else
-		// System.out.println("删除失败") ;
+		SpeakerVO speaker = new SpeakerVO() ;
+		speaker.setId(12);
+		speaker.setUuid("fkdahfkdfhkjdgfkdgfkf");
+		speaker.setName("zhangsan");
+		CategoryVO category = new CategoryVO(11,"fdasfhjkdsf","呼吸科") ;
+		ResourceVO resource = new ResourceVO() ;
+		resource.setId(99);
+		resource.setUuid("fdsfdfhghj");
+		resource.setName("这是一个测试视频");
+		resource.setCode("fggfhghgh");
+		resource.setMark("我们来测试这个视频");
+		resource.setSpeaker(speaker);
+		resource.setCategory(category);
+		esHandler.createIndexResponse("zhiliao", "resource", resource.getUuid(), JsonUtil.obj2JsonData(resource));
 
 	}
 }

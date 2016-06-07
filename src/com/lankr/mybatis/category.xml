@@ -18,7 +18,7 @@
 	</resultMap>
 
 
-	<select id="selectbyId" resultMap="categoryMapper" parameterType="java.lang.Integer">
+	<select id="selectById" resultMap="categoryMapper" parameterType="java.lang.Integer">
 		select * from category where id = #{id,jdbcType=INTEGER}
 	</select>
 

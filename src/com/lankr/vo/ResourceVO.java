@@ -12,6 +12,18 @@ public class ResourceVO {
 	private String mark ;
 	private SpeakerVO speaker ;
 	private CategoryVO category ;
+	
+	public ResourceVO(){}
+	
+	public ResourceVO(int id, String uuid, String name, String code, String mark, SpeakerVO speaker, CategoryVO category){
+		this.setId(id);
+		this.setUuid(uuid);
+		this.setName(name);
+		this.setCode(code);
+		this.setMark(mark);
+		this.setSpeaker(speaker);
+		this.setCategory(category);
+	}
 
 	public String getCode() {
 		return code;

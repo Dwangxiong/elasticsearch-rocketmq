@@ -30,6 +30,8 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +40,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.common.message.Message;
+import com.google.gson.Gson;
 import com.lankr.dennisit.entity.process.ElasticSearchHandler;
 import com.lankr.dennisit.util.JsonUtil;
 import com.lankr.interceptor.MyInterceptor;
@@ -72,7 +75,7 @@ public class ServerController extends BaseController{
 		
 		if (keyword == null || keyword == "") {
 			queryBuilder = QueryBuilders.matchAllQuery() ;
-			searchHits = esHandler.searcher(queryBuilder, "zhiliao", "hospital") ;
+			searchHits = esHandler.searcher(queryBuilder, "zhiliao", "resource") ;
 			 if(searchHits.length>0){
 		            for(SearchHit hit:searchHits){
 		            	int id = (int) hit.getSource().get("id") ;
@@ -83,8 +86,8 @@ public class ServerController extends BaseController{
 		            }
 	      	}
 		} else { 
-			queryBuilder = QueryBuilders.matchQuery( "name", keyword ) ;
-			searchHits = esHandler.searcher(queryBuilder, "zhiliao", "hospital") ;
+			queryBuilder = QueryBuilders.matchQuery("speaker.name", keyword ) ;
+			searchHits = esHandler.searcher(queryBuilder, "zhiliao", "resource") ;
 			if(searchHits.length>0){
 	            for(SearchHit hit:searchHits){
 	            	int id = (int) hit.getSource().get("id") ;
@@ -97,6 +100,108 @@ public class ServerController extends BaseController{
 		}
 		System.out.println("search-------------------"+hospitalVOs.size()) ;
 		return hospitalVOs ;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/api/search/resource")
+	public List<ResourceVO> searchResource(HttpServletRequest request,  
+            HttpServletResponse response,ModelMap model, Object String) throws UnsupportedEncodingException {
+		response.setHeader("Access-Control-Allow-Origin", "*") ;
+		request.setCharacterEncoding("UTF-8") ;
+		response.setCharacterEncoding("UTF-8") ;
+		
+		String keyword = request.getParameter("keyword") ;
+		
+		QueryBuilder queryBuilder = null ;
+		List<ResourceVO> resourceVOs = new ArrayList<ResourceVO>() ;
+		SearchHit[] searchHits = null ;
+		logger.info("用户查询关键字：" + keyword);
+		
+		if (keyword == null || keyword == "") {
+			queryBuilder = QueryBuilders.matchAllQuery() ;
+			searchHits = esHandler.searcher(queryBuilder, "zhiliao", "resource") ;
+			 if(searchHits.length>0){
+		            for(SearchHit hit:searchHits){
+		            	int id = (int) hit.getSource().get("id") ;
+		                String uuid = (String)hit.getSource().get("uuid");
+		                String name =  (String) hit.getSource().get("name");
+		                String code =  (String) hit.getSource().get("code");
+		                String mark = (String) hit.getSource().get("mark");
+		                String jsonSpeaker = (String) hit.getSource().get("speaker") ;
+		                String jsonCategory = (String) hit.getSource().get("category") ;
+		                SpeakerVO speaker = null ;
+		                CategoryVO category =null ;
+		                if (jsonSpeaker != null) {
+		                	try {
+								JSONObject jsonObject = new JSONObject(jsonSpeaker) ;
+								int speakerId = jsonObject.getInt("id") ;
+								String speakerUuid = jsonObject.getString("uuid") ;
+								String speakerName = jsonObject.getString("name") ;
+								speaker = new SpeakerVO(speakerId, speakerUuid, speakerName) ;
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+		                }
+		                if (jsonCategory != null) {
+		                	try {
+								JSONObject jsonObject = new JSONObject(jsonCategory) ;
+								int categoryId = jsonObject.getInt("id") ;
+								String categoryUuid = jsonObject.getString("uuid") ;
+								String categoryName = jsonObject.getString("name") ;
+								speaker = new SpeakerVO(categoryId, categoryUuid, categoryName) ;
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+		                }
+		                resourceVOs.add(new ResourceVO(id, uuid, name, code, mark, speaker, category));
+		            }
+	      	}
+		} else { 
+			queryBuilder = QueryBuilders.multiMatchQuery(keyword, "speaker","category", "name","mark").operator(Operator.AND) ;
+			searchHits = esHandler.searcher(queryBuilder, "zhiliao", "resource") ;
+			Gson g = new Gson();
+			System.out.println(g.toJson(searchHits));
+			if(searchHits.length>0){
+	            for(SearchHit hit:searchHits){
+	            	
+	            	
+	            	int id = (int) hit.getSource().get("id") ;
+	                String uuid = (String)hit.getSource().get("uuid");
+	                String name =  (String) hit.getSource().get("name");
+	                String code =  (String) hit.getSource().get("code");
+	                String mark = (String) hit.getSource().get("mark");
+	                String jsonSpeaker = (String) hit.getSource().get("speaker") ;
+	                String jsonCategory = (String) hit.getSource().get("category") ;
+	                SpeakerVO speaker = null ;
+	                CategoryVO category =null ;
+	                if (jsonSpeaker != null) {
+	                	try {
+							JSONObject jsonObject = new JSONObject(jsonSpeaker) ;
+							int speakerId = jsonObject.getInt("id") ;
+							String speakerUuid = jsonObject.getString("uuid") ;
+							String speakerName = jsonObject.getString("name") ;
+							speaker = new SpeakerVO(speakerId, speakerUuid, speakerName) ;
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+	                }
+	                if (jsonCategory != null) {
+	                	try {
+							JSONObject jsonObject = new JSONObject(jsonCategory) ;
+							int categoryId = jsonObject.getInt("id") ;
+							String categoryUuid = jsonObject.getString("uuid") ;
+							String categoryName = jsonObject.getString("name") ;
+							category = new CategoryVO(categoryId, categoryUuid, categoryName) ;
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+	                }
+	                resourceVOs.add(new ResourceVO(id, uuid, name, code, mark, speaker, category));
+	            }
+      	}
+		}
+		System.out.println("search-------------------"+resourceVOs.size()) ;
+		return resourceVOs ;
 	}
 	
 	@ResponseBody
@@ -148,8 +253,16 @@ public class ServerController extends BaseController{
 				resourceVO.setId(resource.getId()) ;
 				resourceVO.setUuid(resource.getUuid()) ;
 				resourceVO.setName(resource.getName()) ;
-				resourceVO.setSpeaker(new SpeakerVO(resource.getSpeaker().getId(),resource.getSpeaker().getUuid(),resource.getSpeaker().getName()));
-				resourceVO.setCategory(new CategoryVO(resource.getCategory().getId(),resource.getCategory().getUuid(),resource.getCategory().getName()));
+				if (resource.getCode() != null)
+					resourceVO.setCode(resource.getCode());
+				else
+					resourceVO.setCode("");
+				if (resource.getMark() != null)
+					resourceVO.setMark(resource.getMark());
+				if (resource.getSpeaker() != null)
+					resourceVO.setSpeaker(new SpeakerVO(resource.getSpeaker().getId(),resource.getSpeaker().getUuid(),resource.getSpeaker().getName()));
+				if (resource.getCategory() != null) 
+					resourceVO.setCategory(new CategoryVO(resource.getCategory().getId(),resource.getCategory().getUuid(),resource.getCategory().getName()));
 				esHandler.createIndexResponse("zhiliao", "resource", uuid, JsonUtil.obj2JsonData(resourceVO)) ;
 			}
 			resources = resourceMgrFacade.selectAllResource(id, 50) ;

@@ -53,8 +53,8 @@ public class JsonUtil {
             .field("name", resourceVO.getName())
             .field("code",resourceVO.getCode())
             .field("mark", resourceVO.getMark())
-            .field("speakers", JsonUtil.parseSpeaker(resourceVO.getSpeaker()))
-            .field("categorys", JsonUtil.parseCategory(resourceVO.getCategory()))
+            .field("speaker", JsonUtil.parseSpeaker(resourceVO.getSpeaker()))
+            .field("category", JsonUtil.parseCategory(resourceVO.getCategory()))
             .endObject();
             jsonData = jsonBuild.string();
             System.out.println(jsonData);
@@ -65,39 +65,44 @@ public class JsonUtil {
     }
 
 	private static String parseSpeaker(SpeakerVO speaker) {
-		 XContentBuilder jsonBuild;
-		 String jsonData = null ;
-		try {
-			jsonBuild = XContentFactory.jsonBuilder();
-			jsonBuild.startObject()
-            .field("id", speaker.getId())
-            .field("uuid",speaker.getUuid())
-            .field("name", speaker.getName())
-            .endObject();
-            jsonData = jsonBuild.string();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (speaker != null) {
+			 XContentBuilder jsonBuild;
+			 String jsonData = null ;
+			try {
+				jsonBuild = XContentFactory.jsonBuilder();
+				jsonBuild.startObject()
+	            .field("id", speaker.getId())
+	            .field("uuid",speaker.getUuid())
+	            .field("name", speaker.getName())
+	            .endObject();
+	            jsonData = jsonBuild.string();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return jsonData ;
 		}
-	            
 		
-		return jsonData ;
+		return null ;
 	}
 	
 	private static String parseCategory(CategoryVO category) {
-		 XContentBuilder jsonBuild ;
-		 String jsonData = null ;
-		try {
-			jsonBuild = XContentFactory.jsonBuilder();
-			jsonBuild.startObject()
-            .field("id", category.getId())
-            .field("uuid",category.getUuid())
-            .field("name", category.getName())
-            .endObject();
-            jsonData = jsonBuild.string();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (category != null) {
+			 XContentBuilder jsonBuild ;
+			 String jsonData = null ;
+			try {
+				jsonBuild = XContentFactory.jsonBuilder();
+				jsonBuild.startObject()
+	            .field("id", category.getId())
+	            .field("uuid",category.getUuid())
+	            .field("name", category.getName())
+	            .endObject();
+	            jsonData = jsonBuild.string();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		            
+			return jsonData ;
 		}
-	            
-		return jsonData ;
+		return null ;
 	}
 }
