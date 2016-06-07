@@ -28,6 +28,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,21 +58,40 @@ public class ServerController extends BaseController{
 	public List<HospitalVO> search(HttpServletRequest request,  
             HttpServletResponse response,ModelMap model) throws UnsupportedEncodingException {
 		response.setHeader("Access-Control-Allow-Origin", "*") ;
-		//request.setCharacterEncoding("UTF-8") ;
-		//response.setCharacterEncoding("UTF-8") ;
+		request.setCharacterEncoding("UTF-8") ;
+		response.setCharacterEncoding("UTF-8") ;
 		
 		String keyword = request.getParameter("keyword") ;
 		
 		QueryBuilder queryBuilder = null ;
-		List<HospitalVO> hospitalVOs = null ;
+		List<HospitalVO> hospitalVOs = new ArrayList<HospitalVO>() ;
+		SearchHit[] searchHits = null ;
 		logger.info("用户查询关键字：" + keyword);
 		
 		if (keyword == null || keyword == "") {
 			queryBuilder = QueryBuilders.matchAllQuery() ;
-			hospitalVOs = esHandler.searcher(queryBuilder, "zhiliao", "hospital") ;
+			searchHits = esHandler.searcher(queryBuilder, "zhiliao", "hospital") ;
+			 if(searchHits.length>0){
+		            for(SearchHit hit:searchHits){
+		            	int id = (int) hit.getSource().get("id") ;
+		                String uuid = (String)hit.getSource().get("uuid");
+		                String name =  (String) hit.getSource().get("name");
+		                String address =  (String) hit.getSource().get("address");
+		                hospitalVOs.add(new HospitalVO(id, uuid, name, address));
+		            }
+	      	}
 		} else { 
 			queryBuilder = QueryBuilders.matchQuery( "name", keyword ) ;
-			hospitalVOs = esHandler.searcher(queryBuilder, "zhiliao", "hospital") ;
+			searchHits = esHandler.searcher(queryBuilder, "zhiliao", "hospital") ;
+			if(searchHits.length>0){
+	            for(SearchHit hit:searchHits){
+	            	int id = (int) hit.getSource().get("id") ;
+	                String uuid = (String)hit.getSource().get("uuid");
+	                String name =  (String) hit.getSource().get("name");
+	                String address =  (String) hit.getSource().get("address");
+	                hospitalVOs.add(new HospitalVO(id, uuid, name, address));
+	            }
+      	}
 		}
 		System.out.println("search-------------------"+hospitalVOs.size()) ;
 		return hospitalVOs ;
@@ -85,7 +106,6 @@ public class ServerController extends BaseController{
 		//response.setCharacterEncoding("UTF-8") ;
 		
 		List<Hospital> hospitals = this.selectAllHospital(0, 50) ;
-		//esHandler.deleteIndex("zhiliao","hospital") ;
 		int counts = 0 ;
 		while (hospitals.size() != 0) {
 			counts += hospitals.size() ;
@@ -109,11 +129,10 @@ public class ServerController extends BaseController{
 	public String rebuildResource(HttpServletRequest request,  
             HttpServletResponse response,ModelMap model) throws UnsupportedEncodingException {
 		
-		request.setCharacterEncoding("UTF-8") ;
-		response.setCharacterEncoding("UTF-8") ;
+		//request.setCharacterEncoding("UTF-8") ;
+		//response.setCharacterEncoding("UTF-8") ;
 		
 		List<Resource> resources = resourceMgrFacade.selectAllResource(0, 50) ;
-		//esHandler.deleteIndex("zhiliao","resource") ;
 		int counts = 0 ;
 		while (resources.size() != 0) {
 			counts += resources.size() ;

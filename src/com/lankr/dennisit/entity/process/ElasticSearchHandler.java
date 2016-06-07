@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
+import org.elasticsearch.action.admin.indices.exists.types.TypesExistsRequest;
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuilder;
@@ -89,18 +90,23 @@ public class ElasticSearchHandler {
 	    
 	    public void createIndexResponse(String indexname, String type,String uuid, List<String> jsondata){
 	        //创建索引库 需要注意的是.setRefresh(true)这里一定要设置,否则第一次建立索引查找不到数据
-	    	
-	    	Map map = client.admin().cluster()  
-                    .health(new ClusterHealthRequest(indexname)).actionGet()  
-                    .getIndices() ;  
-	    	boolean exists = map.containsKey(indexname) ;
-	    	if (!exists)
-				try {
-					CreateMapping.createMappingOnHospital(indexname,type) ;
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-	    	
+	    	checkIndex(indexname) ;
+	    	boolean exists = client.admin().indices().prepareTypesExists().setTypes(type).execute().actionGet().isExists();
+	    	if (!exists) {
+	    		if ("hospital".equals(type)) {
+		    		try {
+						CreateMapping.createMappingOnHospital(indexname, type) ;
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+	    		} else if ("resource".equals(type)) {
+	    			try {
+						CreateMapping.createMappingOnResource(indexname, type) ;
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+	    		}
+	    	}
 	        IndexRequestBuilder requestBuilder = client.prepareIndex(indexname, type).setRefresh(true);
 	        for(int i=0; i<jsondata.size(); i++){
 	            requestBuilder.setSource(jsondata.get(i)).setId(uuid).execute().actionGet();
@@ -118,16 +124,23 @@ public class ElasticSearchHandler {
 	    public IndexResponse createIndexResponse(String indexname, String type,String uuid, String jsondata){
 	    	
 	    	//增加数据前确保索引已经创建
-	    	Map map = client.admin().cluster()  
-                    .health(new ClusterHealthRequest(indexname)).actionGet()  
-                    .getIndices() ;  
-	    	boolean exists = map.containsKey(indexname) ;
-	    	if (!exists)
-				try {
-					CreateMapping.createMappingOnHospital(indexname,type) ;
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+	    	checkIndex(indexname) ;
+	    	boolean exists = client.admin().indices().prepareTypesExists().setTypes(type).execute().actionGet().isExists();
+	    	if (!exists) {
+	    		if ("hospital".equals(type)) {
+		    		try {
+						CreateMapping.createMappingOnHospital(indexname, type) ;
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+	    		} else if ("resource".equals(type)) {
+	    			try {
+						CreateMapping.createMappingOnResource(indexname, type) ;
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+	    		}
+	    	}
 	        IndexResponse response = client.prepareIndex(indexname, type, uuid).setRefresh(true)
 	            .setSource(jsondata)
 	            .execute()
@@ -142,19 +155,25 @@ public class ElasticSearchHandler {
 	     * @param type
 	     * @return
 	     */
-	    public List<HospitalVO>  searcher(QueryBuilder queryBuilder, String indexname, String type){
+	    public SearchHit[]  searcher(QueryBuilder queryBuilder, String indexname, String type){
 	    	//查询前，没有索引则创建
-	    	Map map = client.admin().cluster()  
-                    .health(new ClusterHealthRequest(indexname)).actionGet()  
-                    .getIndices() ;  
-	    	boolean exists = map.containsKey(indexname) ;
-	    	if (!exists)
-				try {
-					CreateMapping.createMappingOnHospital(indexname,type) ;
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-	    	
+	    	checkIndex(indexname) ;
+	    	boolean exists = client.admin().indices().prepareTypesExists().setTypes(type).execute().actionGet().isExists();
+	    	if (!exists) {
+	    		if ("hospital".equals(type)) {
+		    		try {
+						CreateMapping.createMappingOnHospital(indexname, type) ;
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+	    		} else if ("resource".equals(type)) {
+	    			try {
+						CreateMapping.createMappingOnResource(indexname, type) ;
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+	    		}
+	    	}
 	        List<HospitalVO> list = new ArrayList<HospitalVO>();
 	        SearchResponse searchResponse = client.prepareSearch(indexname).setTypes(type)
 	        //此处可以设置返回数据的数量
@@ -174,7 +193,7 @@ public class ElasticSearchHandler {
 	                list.add(new HospitalVO(id, uuid, name, address));
 	            }
 	        }
-	        return list;
+	        return searchHits;
 	    }
 	    
 	    /**
@@ -224,25 +243,6 @@ public class ElasticSearchHandler {
 	    	
 	    }
 	    
-//	    /**
-//	     * 执行删除type
-//	     * @param id
-//	     * @param indexname
-//	     * @param type
-//	     */
-//	    public void deleteType (String indexname,String type) {
-//	    	
-//	    	//删除前要确保索引存在,否则会报错
-//	    	Map map = client.admin().cluster()  
-//                    .health(new ClusterHealthRequest(indexname)).actionGet()  
-//                    .getIndices() ;  
-//	    	boolean exists = map.containsKey(indexname) ;
-//	    	if (!exists)
-//				return ;
-//	    	DeleteRequest request = new DeleteRequest() ; 
-//	    	client.prepareDelete().setIndex(indexname).setType(type).execute().actionGet() ;
-//	    	
-//	    }
 	    
 	    /**
 	     * 执行更新数据
@@ -253,16 +253,23 @@ public class ElasticSearchHandler {
 	    public void update (String indexname, String type, Hospital hospital) {
 	    	
 	    	//查询前，没有索引则创建
-	    	Map map = client.admin().cluster()  
-                    .health(new ClusterHealthRequest(indexname)).actionGet()  
-                    .getIndices() ;  
-	    	boolean exists = map.containsKey(indexname) ;
-	    	if (!exists)
-				try {
-					CreateMapping.createMappingOnHospital(indexname,type) ;
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+	    	checkIndex(indexname) ;
+	    	boolean exists = client.admin().indices().prepareTypesExists().setTypes(type).execute().actionGet().isExists();
+	    	if (!exists) {
+	    		if ("hospital".equals(type)) {
+		    		try {
+						CreateMapping.createMappingOnHospital(indexname, type) ;
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+	    		} else if ("resource".equals(type)) {
+	    			try {
+						CreateMapping.createMappingOnResource(indexname, type) ;
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+	    		}
+	    	}
 	    	int id = hospital.getId() ;
 	    	String uuid = hospital.getUuid() ;
 	    	String name = hospital.getName() ;
@@ -270,8 +277,8 @@ public class ElasticSearchHandler {
 	    	
 	    	UpdateRequest updateRequest = new UpdateRequest(indexname, type, uuid) ;
 	    	QueryBuilder queryBuilder = QueryBuilders.termQuery("uuid", uuid) ;
-	    	List<HospitalVO> hospitals = searcher(queryBuilder, indexname, type) ;
-	    	if (hospitals.size() < 1) {
+	    	SearchHit[] searchHits = searcher(queryBuilder, indexname, type) ;
+	    	if (searchHits.length < 1) {
 	    		createIndexResponse(indexname, type, uuid, JsonUtil.obj2JsonData(hospital)) ;
 	    		return ;
 	    	}
@@ -316,11 +323,22 @@ public class ElasticSearchHandler {
 			}
 	    }
 	    
+	    public void checkIndex(String indexname) {
+	    	//查询前，没有索引则创建
+	    	Map map = client.admin().cluster()  
+                    .health(new ClusterHealthRequest(indexname)).actionGet()  
+                    .getIndices() ;  
+	    	boolean exists = map.containsKey(indexname) ;
+	    	if (!exists)
+	    		client.admin().indices().prepareCreate(indexname).execute().actionGet() ;
+	    }
 	    
 	    
 	    public static void main(String[] args) throws IOException {
-	    	//ElasticSearchHandler eh = new ElasticSearchHandler() ;
-	    	//eh.deleteType("zhiliao","resource") ;
+	    	ElasticSearchHandler esHandler = new ElasticSearchHandler();
+	    	//esHandler.deleteType("zhiliao", "resource") ;
+	    	//boolean exists = esHandler.client.admin().indices().prepareTypesExists().setTypes("resource").execute().actionGet().isExists();
+	    	//System.out.println(exists);
 //	        ElasticSearchHandler esHandler = new ElasticSearchHandler();
 //	        List<String> jsondata = DataFactory.getInitJsonData();
 //	        String indexname = "indexdemo";
