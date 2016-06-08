@@ -77,7 +77,7 @@ public class ServerController extends BaseController{
 		
 		if (keyword == null || keyword == "") {
 			queryBuilder = QueryBuilders.matchAllQuery() ;
-			searchHits = esHandler.searcher(queryBuilder, "zhiliao", "resource") ;
+			searchHits = esHandler.searcher(queryBuilder, "zhiliao", "hospital") ;
 			 if(searchHits.length>0){
 		            for(SearchHit hit:searchHits){
 		            	int id = (int) hit.getSource().get("id") ;
@@ -88,8 +88,8 @@ public class ServerController extends BaseController{
 		            }
 	      	}
 		} else { 
-			queryBuilder = QueryBuilders.matchQuery("speaker.name", keyword ) ;
-			searchHits = esHandler.searcher(queryBuilder, "zhiliao", "resource") ;
+			queryBuilder = QueryBuilders.matchQuery("name", keyword ) ;
+			searchHits = esHandler.searcher(queryBuilder, "zhiliao", "hospital") ;
 			if(searchHits.length>0){
 	            for(SearchHit hit:searchHits){
 	            	int id = (int) hit.getSource().get("id") ;

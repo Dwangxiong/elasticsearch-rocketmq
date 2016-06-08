@@ -42,7 +42,13 @@ import com.lankr.vo.CategoryVO;
 import com.lankr.vo.HospitalVO;
 import com.lankr.vo.ResourceVO;
 import com.lankr.vo.SpeakerVO;
-
+/**
+ * 
+ * @author Lankr
+ * 如需要支持全文查询 可做一个column将所有的文档归入，然后查询该列，
+ * query的operator设置为OR 能实现智能查询
+ *
+ */
 public class ElasticSearchHandler {
 
 	private Client client;
@@ -187,11 +193,11 @@ public class ElasticSearchHandler {
 		
 		SearchResponse searchResponse = null ;
 		if ("hospital".equals(type))
-			searchResponse = client.prepareSearch(indexname).setTypes(type).addHighlightedField("name").setHighlighterPreTags("<span style=\"color:red\">")
+			searchResponse = client.prepareSearch(indexname).setTypes(type).addHighlightedField("name").setHighlighterPreTags("<span style='color:red'>")
 				// 此处可以设置返回数据的数量
 				.setHighlighterPostTags("</span>").setQuery(queryBuilder).setSize(50).execute().actionGet();
 		else if ("resource".equals(type)) 
-			searchResponse = client.prepareSearch(indexname).setTypes(type).addHighlightedField("name").addHighlightedField("mark")
+			searchResponse = client.prepareSearch(indexname).setTypes(type) .addHighlightedField("name").addHighlightedField("mark")
 				// 此处可以设置返回数据的数量
 				.addHighlightedField("speaker").addHighlightedField("category").setHighlighterPreTags("<span style='color:red'>")
 				.setHighlighterPostTags("</span>").setQuery(queryBuilder).setSize(50).execute().actionGet();
