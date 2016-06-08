@@ -18,6 +18,7 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.elasticsearch.common.text.Text;
 import org.elasticsearch.index.query.MatchQueryBuilder.Operator;
 import org.elasticsearch.index.query.MatchQueryBuilder.ZeroTermsQuery;
 import org.apache.commons.logging.Log;
@@ -30,6 +31,7 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.highlight.HighlightField;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
@@ -59,7 +61,7 @@ public class ServerController extends BaseController{
 	protected static Log logger = LogFactory.getLog(ServerController.class);
 	
 	@ResponseBody
-	@RequestMapping("/api/search")
+	@RequestMapping("/api/search/hospital")
 	public List<HospitalVO> search(HttpServletRequest request,  
             HttpServletResponse response,ModelMap model) throws UnsupportedEncodingException {
 		response.setHeader("Access-Control-Allow-Origin", "*") ;
@@ -94,9 +96,21 @@ public class ServerController extends BaseController{
 	                String uuid = (String)hit.getSource().get("uuid");
 	                String name =  (String) hit.getSource().get("name");
 	                String address =  (String) hit.getSource().get("address");
+	                Map<String,HighlightField> result = hit.highlightFields() ;
+		              //System.out.println(result);
+		            	if (result != null) {
+			            	HighlightField fieldName = result.get("name") ;
+			            	if (fieldName != null) {
+			            		name="" ;
+				            	Text[] texts = fieldName.fragments() ;
+				            	for (Text text : texts) {
+				            		name += text.toString() ;
+				            	}
+			            	}
+		            	}
 	                hospitalVOs.add(new HospitalVO(id, uuid, name, address));
 	            }
-      	}
+			}
 		}
 		System.out.println("search-------------------"+hospitalVOs.size()) ;
 		return hospitalVOs ;
@@ -105,9 +119,13 @@ public class ServerController extends BaseController{
 	@ResponseBody
 	@RequestMapping("/api/search/resource")
 	public List<ResourceVO> searchResource(HttpServletRequest request,  
-            HttpServletResponse response,ModelMap model, Object String) throws UnsupportedEncodingException {
+            HttpServletResponse response,ModelMap model, Object String){
 		response.setHeader("Access-Control-Allow-Origin", "*") ;
-		request.setCharacterEncoding("UTF-8") ;
+		try {
+			request.setCharacterEncoding("UTF-8") ;
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
 		response.setCharacterEncoding("UTF-8") ;
 		
 		String keyword = request.getParameter("keyword") ;
@@ -159,11 +177,10 @@ public class ServerController extends BaseController{
 		} else { 
 			queryBuilder = QueryBuilders.multiMatchQuery(keyword, "speaker","category", "name","mark").operator(Operator.AND) ;
 			searchHits = esHandler.searcher(queryBuilder, "zhiliao", "resource") ;
-			Gson g = new Gson();
-			System.out.println(g.toJson(searchHits));
+			//Gson g = new Gson();
+			//System.out.println(g.toJson(searchHits));
 			if(searchHits.length>0){
 	            for(SearchHit hit:searchHits){
-	            	
 	            	
 	            	int id = (int) hit.getSource().get("id") ;
 	                String uuid = (String)hit.getSource().get("uuid");
@@ -172,9 +189,49 @@ public class ServerController extends BaseController{
 	                String mark = (String) hit.getSource().get("mark");
 	                String jsonSpeaker = (String) hit.getSource().get("speaker") ;
 	                String jsonCategory = (String) hit.getSource().get("category") ;
+	                Map<String,HighlightField> result = hit.highlightFields() ;
+	              //System.out.println(result);
+	            	if (result != null) {
+		            	HighlightField fieldName = result.get("name") ;
+		            	if (fieldName != null) {
+		            		name="" ;
+			            	Text[] texts = fieldName.fragments() ;
+			            	for (Text text : texts) {
+			            		name += text.toString() ;
+			            	}
+		            	}
+		            	HighlightField fieldMark = result.get("mark") ;
+		            	if (fieldMark != null) {
+		            		mark="" ;
+			            	Text[] texts = fieldMark.fragments() ;
+			            	for (Text text : texts) {
+			            		//System.out.println("------------text----------------" + text);
+			            		mark += text.toString() ;
+			            	}
+		            	}
+		            	HighlightField fieldSpeaker = result.get("speaker") ;
+		            	if (fieldSpeaker != null) {
+		            		jsonSpeaker="" ;
+			            	Text[] texts = fieldSpeaker.fragments() ;
+			            	for (Text text : texts) {
+			            		System.out.println("------------text----------------" + text);
+			            		jsonSpeaker += text.toString() ;
+			            	}
+		            	}
+		            	HighlightField fieldCategory = result.get("category") ;
+		            	if (fieldCategory != null) {
+		            		jsonCategory="" ;
+			            	Text[] texts = fieldCategory.fragments() ;
+			            	for (Text text : texts) {
+			            	
+			            		jsonCategory += text.toString() ;
+			            	}
+		            	}
+	            	}
+	            	//System.out.println("-----------------speaker --------" + jsonSpeaker);
 	                SpeakerVO speaker = null ;
 	                CategoryVO category =null ;
-	                if (jsonSpeaker != null) {
+	                if (jsonSpeaker != null && jsonSpeaker != "") {
 	                	try {
 							JSONObject jsonObject = new JSONObject(jsonSpeaker) ;
 							int speakerId = jsonObject.getInt("id") ;
@@ -185,7 +242,7 @@ public class ServerController extends BaseController{
 							e.printStackTrace();
 						}
 	                }
-	                if (jsonCategory != null) {
+	                if (jsonCategory != null && jsonCategory != "") {
 	                	try {
 							JSONObject jsonObject = new JSONObject(jsonCategory) ;
 							int categoryId = jsonObject.getInt("id") ;
@@ -207,10 +264,14 @@ public class ServerController extends BaseController{
 	@ResponseBody
 	@RequestMapping("/api/rebuild/hospital")
 	public String rebuildHospital(HttpServletRequest request,  
-            HttpServletResponse response,ModelMap model) throws UnsupportedEncodingException {
+            HttpServletResponse response,ModelMap model){
 		
-		//request.setCharacterEncoding("UTF-8") ;
-		//response.setCharacterEncoding("UTF-8") ;
+		try {
+			request.setCharacterEncoding("UTF-8") ;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		response.setCharacterEncoding("UTF-8") ;
 		
 		List<Hospital> hospitals = this.selectAllHospital(0, 50) ;
 		int counts = 0 ;
@@ -234,10 +295,14 @@ public class ServerController extends BaseController{
 	@ResponseBody
 	@RequestMapping("/api/rebuild/resource")
 	public String rebuildResource(HttpServletRequest request,  
-            HttpServletResponse response,ModelMap model) throws UnsupportedEncodingException {
+            HttpServletResponse response,ModelMap model){
 		
-		//request.setCharacterEncoding("UTF-8") ;
-		//response.setCharacterEncoding("UTF-8") ;
+		try {
+			request.setCharacterEncoding("UTF-8") ;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		response.setCharacterEncoding("UTF-8") ;
 		
 		List<Resource> resources = resourceMgrFacade.selectAllResource(0, 50) ;
 		int counts = 0 ;

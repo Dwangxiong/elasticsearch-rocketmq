@@ -184,9 +184,17 @@ public class ElasticSearchHandler {
 			}
 		}
 		List<HospitalVO> list = new ArrayList<HospitalVO>();
-		SearchResponse searchResponse = client.prepareSearch(indexname).setTypes(type)
+		
+		SearchResponse searchResponse = null ;
+		if ("hospital".equals(type))
+			searchResponse = client.prepareSearch(indexname).setTypes(type).addHighlightedField("name").setHighlighterPreTags("<span style=\"color:red\">")
 				// 此处可以设置返回数据的数量
-				.setQuery(queryBuilder).setSize(50).execute().actionGet();
+				.setHighlighterPostTags("</span>").setQuery(queryBuilder).setSize(50).execute().actionGet();
+		else if ("resource".equals(type)) 
+			searchResponse = client.prepareSearch(indexname).setTypes(type).addHighlightedField("name").addHighlightedField("mark")
+				// 此处可以设置返回数据的数量
+				.addHighlightedField("speaker").addHighlightedField("category").setHighlighterPreTags("<span style='color:red'>")
+				.setHighlighterPostTags("</span>").setQuery(queryBuilder).setSize(50).execute().actionGet();
 		SearchHits hits = searchResponse.getHits();
 		System.out.println("查询到记录数=" + hits.getTotalHits());
 		SearchHit[] searchHits = hits.getHits();
