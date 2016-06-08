@@ -66,6 +66,8 @@
 	<bean id="resourceMgrFacade" class="com.lankr.service.facadeImpl.ResourceMgrFacadeImpl" />
 	<bean id="speakerMgrFacade" class="com.lankr.service.facadeImpl.SpeakerMgrFacadeImpl" />
 	<bean id="categoryMgrFacade" class="com.lankr.service.facadeImpl.CategoryMgrFacadeImpl" />
+	<bean id="cityMgrFacade" class="com.lankr.service.facadeImpl.CityMgrFacadeImpl" />
+	<bean id="provinceMgrFacade" class="com.lankr.service.facadeImpl.ProvinceMgrFacadeImpl" />
 </beans>
 
 

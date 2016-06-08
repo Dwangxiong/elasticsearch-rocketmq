@@ -1,6 +1,8 @@
 package com.lankr.vo;
 
-public class CategoryVO {
+public class CityVO {
+	
+	private ProvinceVO province ;
 	
 	private String uuid;
 
@@ -13,7 +15,31 @@ public class CategoryVO {
 	private int _status;
 
 	private String mark;
-	
+
+	public ProvinceVO getProvince() {
+		return province;
+	}
+
+	public void setProvince(ProvinceVO province) {
+		this.province = province;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public long getCreateTime() {
 		return createTime;
 	}
@@ -45,21 +71,4 @@ public class CategoryVO {
 	public void setMark(String mark) {
 		this.mark = mark;
 	}
-
-	public String getUuid() {
-		return uuid;
-	}
-	
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	 
-	public void setName(String name) {
-		this.name = name;
-	}
-	
 }

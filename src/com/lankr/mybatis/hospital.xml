@@ -11,10 +11,11 @@
 		<result property="mobile" column="mobile" />
 		<result property="address" column="address" />
 		<result property="provinceId" column="provinceId" />
-		<result property="cityId" column="cityId" />
 		<result property="createDate" column="createDate" />
 		<result property="modifyDate" column="modifyDate" />
 		<result property="isActive" column="idActive" />
+		<association property="city" column="cityId"
+			select="com.lankr.mybatis.mapper.CityMapper.selectById" />
 	</resultMap>
 
 
@@ -22,6 +23,10 @@
 		select * from base_hospital where isActive=1
 		and id > #{id,jdbcType=INTEGER}
 		order by id limit #{size,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectById" resultMap="hospitalMapper" parameterType="java.lang.Integer">
+		select * from base_hospital where id = #{id,jdbcType=INTEGER}
 	</select>
 
 </mapper>

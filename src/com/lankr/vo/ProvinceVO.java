@@ -1,6 +1,6 @@
 package com.lankr.vo;
 
-public class CategoryVO {
+public class ProvinceVO {
 	
 	private String uuid;
 
@@ -12,8 +12,22 @@ public class CategoryVO {
 	// 状态码
 	private int _status;
 
-	private String mark;
-	
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public long getCreateTime() {
 		return createTime;
 	}
@@ -46,20 +60,6 @@ public class CategoryVO {
 		this.mark = mark;
 	}
 
-	public String getUuid() {
-		return uuid;
-	}
-	
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	 
-	public void setName(String name) {
-		this.name = name;
-	}
-	
+	private String mark;
+
 }

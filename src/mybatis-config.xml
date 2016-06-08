@@ -23,6 +23,8 @@
 		<typeAlias alias="resource" type="com.lankr.model.Resource" />
 		<typeAlias alias="speaker" type="com.lankr.model.Speaker" />
 		<typeAlias alias="category" type="com.lankr.model.Category" />
+		<typeAlias alias="province" type="com.lankr.model.Province" />
+		<typeAlias alias="city" type="com.lankr.model.City" />
 	</typeAliases>
 
 	<mappers>
@@ -30,6 +32,8 @@
 		<mapper resource="com/lankr/mybatis/resource.xml" />
 		<mapper resource="com/lankr/mybatis/speaker.xml" />
 		<mapper resource="com/lankr/mybatis/category.xml" />
+		<mapper resource="com/lankr/mybatis/province.xml" />
+		<mapper resource="com/lankr/mybatis/city.xml" />
 		
 	</mappers>
 	

@@ -13,7 +13,6 @@
 		<result property="birthday" column="birthday" />
 		<result property="mail" column="mail" />
 		<result property="avatar" column="avatar" />
-		<result property="hospitalId" column="hospitalId" />
 		<result property="departmentsId" column="departmentsId" />
 		<result property="position" column="position" />
 		<result property="userId" column="userId" />
@@ -23,6 +22,8 @@
 		<result property="createDate" column="createDate" />
 		<result property="modifyDate" column="modifyDate" />
 		<result property="isActive" column="idActive" />
+		<association property="hospital" column="hospitalId"
+			select="com.lankr.mybatis.mapper.HospitalMapper.selectById" />
 	</resultMap>
 
 

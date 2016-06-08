@@ -4,15 +4,25 @@ import java.util.Date;
 
 public class Category {
 	private int id;
+	
 	private String name;
+	
 	private String pinyin;
+	
 	private String uuid;
+	
 	private Date createDate;
+	
 	private Date modifyDate;
+	
 	private String mark;
+	
 	private int isActive;
+	
 	private int parentId;
+	
 	private int projectId;
+	
 	private int userId;
 
 	public int getId() {

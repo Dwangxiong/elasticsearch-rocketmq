@@ -11,7 +11,7 @@ public class Hospital {
     private int mobile ;
     private String address ;
     private int provinceId ;
-    private int cityId ;
+    private City city ;
     private Date createDate ;
     public String getGrade() {
 		return grade;
@@ -45,12 +45,12 @@ public class Hospital {
 		this.provinceId = provinceId;
 	}
 
-	public int getCityId() {
-		return cityId;
+	public City getCity() {
+		return city;
 	}
 
-	public void setCityId(int cityId) {
-		this.cityId = cityId;
+	public void setCity(City city) {
+		this.city = city;
 	}
 
 	public Date getCreateDate() {

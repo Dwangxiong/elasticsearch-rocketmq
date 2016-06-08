@@ -14,7 +14,7 @@ public class Speaker {
 	private Date birthday;
 	private String mail;
 	private String avatar;
-	private int hospitalId;
+	private Hospital hospital;
 
 	public int getId() {
 		return id;
@@ -104,12 +104,12 @@ public class Speaker {
 		this.avatar = avatar;
 	}
 
-	public int getHospitalId() {
-		return hospitalId;
+	public Hospital getHospital() {
+		return hospital;
 	}
 
-	public void setHospitalId(int hospitalId) {
-		this.hospitalId = hospitalId;
+	public void setHospital(Hospital hospital) {
+		this.hospital = hospital;
 	}
 
 	public int getDepartmentsId() {
