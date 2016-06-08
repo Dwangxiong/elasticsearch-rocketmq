@@ -118,16 +118,14 @@ public class Consumer implements Runnable{
 							String uuid = msg.getKeys() ;
 							byte[] temp = msg.getBody() ;
 							String content = new String(temp) ;
-							Hospital hospital = Consumer.parseString(content) ;
-							esHandler.createIndexResponse("zhiliao", "hospital", uuid, JsonUtil.obj2JsonData(hospital)) ;
+							esHandler.createIndexResponse("zhiliao", "hospital", uuid, content) ;
 							//Message message = new Message("hospital","add","reply",("OK").getBytes()) ;
 							//Producer.instance().send(msgs);
 						} else if ("update".equals(msg.getTags())) {
 							System.out.println(new String(msg.getBody())) ;
 							String uuid = msg.getKeys() ;
 							String content = msg.getBody().toString() ;
-							Hospital hospital = Consumer.parseString(content) ;
-							esHandler.update("zhiliao", "hospital", hospital) ;
+							esHandler.update("zhiliao", "hospital", content) ;
 						} else if ("delete".equals(msg.getTags())) {
 							System.out.println(new String(msg.getBody())) ;
 							String uuid = msg.getKeys() ;

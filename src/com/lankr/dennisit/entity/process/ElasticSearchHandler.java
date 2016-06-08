@@ -32,6 +32,8 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.lankr.dennisit.util.JsonUtil;
 import com.lankr.mapping.CreateMapping;
@@ -262,10 +264,19 @@ public class ElasticSearchHandler {
 	 * @param indexname
 	 * @param type
 	 */
-	public void update(String indexname, String type, Hospital hospital) {
+	public void update(String indexname, String type, String source) {
 
 		// 查询前，没有索引则创建
 		checkIndex(indexname);
+		String uuid  = null ;
+		try {
+			JSONObject jsonObject = new JSONObject(source);
+			if (jsonObject == null)
+				return ;
+			uuid = jsonObject.getString("uuid") ;
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
 		boolean exists = client.admin().indices().prepareTypesExists().setTypes(type).execute().actionGet().isExists();
 		if (!exists) {
 			if ("hospital".equals(type)) {
@@ -282,36 +293,15 @@ public class ElasticSearchHandler {
 				}
 			}
 		}
-		int id = hospital.getId();
-		String uuid = hospital.getUuid();
-		String name = hospital.getName();
-		String address = hospital.getAddress();
 
 		UpdateRequest updateRequest = new UpdateRequest(indexname, type, uuid);
 		QueryBuilder queryBuilder = QueryBuilders.termQuery("uuid", uuid);
 		SearchHit[] searchHits = searcher(queryBuilder, indexname, type);
 		if (searchHits.length < 1) {
-			createIndexResponse(indexname, type, uuid, JsonUtil.obj2JsonData(hospital));
+			createIndexResponse(indexname, type, uuid, source);
 			return;
 		}
-		try {
-			if (id != 0) {
-				updateRequest.doc(XContentFactory.jsonBuilder().startObject().field("id", id).endObject());
-			}
-
-			if (uuid != null) {
-				updateRequest.doc(XContentFactory.jsonBuilder().startObject().field("uuid", uuid).endObject());
-			}
-			if (name != null) {
-				updateRequest.doc(XContentFactory.jsonBuilder().startObject().field("name", name).endObject());
-			}
-			if (address != null) {
-				updateRequest.doc(XContentFactory.jsonBuilder().startObject().field("address", address).endObject());
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		updateRequest.doc(source) ;
 		try {
 			client.update(updateRequest).get();
 		} catch (InterruptedException | ExecutionException e) {
