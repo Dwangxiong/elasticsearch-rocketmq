@@ -130,8 +130,7 @@ public class Consumer implements Runnable{
 							System.out.println(new String(msg.getBody())) ;
 							String uuid = msg.getKeys() ;
 							String content = msg.getBody().toString() ;
-							Hospital hospital = Consumer.parseString(content) ;
-							esHandler.delete("zhiliao", "hopital", hospital) ;
+							esHandler.delete("zhiliao", "hopital", content) ;
 						}
 					} else {
 						return ConsumeConcurrentlyStatus.CONSUME_SUCCESS ;

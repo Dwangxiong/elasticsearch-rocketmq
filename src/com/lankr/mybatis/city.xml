@@ -1,39 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lankr.mybatis.mapper.ResourceMapper">
+<mapper namespace="com.lankr.mybatis.mapper.CityMapper">
 
-	<resultMap type="resource" id="resourceMapper">
+	<resultMap type="city" id="cityMapper">
 		<result property="id" column="id" />
 		<result property="uuid" column="uuid" />
 		<result property="name" column="name" />
-		<result property="pinyin" column="pinyin" />
-		<result property="rank" column="rank" />
-		<result property="rate" column="rate" />
-		<result property="viewCount" column="viewCount" />
-		<result property="coverTaskId" column="coverTaskId" />
 		<result property="createDate" column="createDate" />
 		<result property="modifyDate" column="modifyDate" />
 		<result property="isActive" column="idActive" />
-		<result property="qrTaskId" column="qrTaskId" />
-		<result property="assetId" column="assetId" />
-		<result property="pdfId" column="pdfId" />
-		<result property="newsId" column="newsId" />
-		<result property="threeScreenId" column="threeScreenId" />
-		<result property="status" column="status" />
-		<result property="mark" column="mark" />
-		<result property="code" column="code" />
-		<association property="category" column="categoryId"
-			select="com.lankr.mybatis.mapper.CategoryMapper.selectById" />
-		<association property="speaker" select="com.lankr.mybatis.mapper.SpeakerMapper.selectById"
-			column="speakerId" />
+		<association property="province" column="provinceId"
+			select="com.lankr.mybatis.mapper.ProvinceMapper.selectById" />
 	</resultMap>
 
 
-	<select id="selectAllResource" resultMap="resourceMapper">
-		select * from resource where isActive=1 and status=1
-		and id > #{id,jdbcType=INTEGER}
-		order by id limit #{size,jdbcType=INTEGER}
+	<select id="selectById" resultMap="cityMapper">
+		select * from base_city where id = #{id,jdbcType=INTEGER}
 	</select>
 
 </mapper>

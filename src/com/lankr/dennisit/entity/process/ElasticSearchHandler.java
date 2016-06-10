@@ -199,9 +199,9 @@ public class ElasticSearchHandler {
 				// 此处可以设置返回数据的数量
 				.setHighlighterPostTags("</span>").setQuery(queryBuilder).setSize(50).execute().actionGet();
 		else if ("resource".equals(type)) 
-			searchResponse = client.prepareSearch(indexname).setTypes(type) .addHighlightedField("name").addHighlightedField("mark")
+			searchResponse = client.prepareSearch(indexname).setTypes(type).addHighlightedField("name").addHighlightedField("mark")
 				// 此处可以设置返回数据的数量
-				.addHighlightedField("speaker").addHighlightedField("category").setHighlighterPreTags("<span style='color:red'>")
+				.addHighlightedField("speaker.name").addHighlightedField("category.name").setHighlighterPreTags("<span style='color:red'>")
 				.setHighlighterPostTags("</span>").setQuery(queryBuilder).setSize(50).execute().actionGet();
 		SearchHits hits = searchResponse.getHits();
 		System.out.println("查询到记录数=" + hits.getTotalHits());
@@ -219,15 +219,22 @@ public class ElasticSearchHandler {
 	 * @param type
 	 * @return
 	 */
-	public boolean delete(String indexname, String type, Hospital hospital) {
+	public boolean delete(String indexname, String type, String content) {
 
 		// 删除前要确保存在,否则会报错
 		Map map = client.admin().cluster().health(new ClusterHealthRequest(indexname)).actionGet().getIndices();
 		boolean exists = map.containsKey(indexname);
 		if (!exists)
 			return false;
-
-		DeleteResponse response = client.prepareDelete(indexname, type, hospital.getUuid()).get();
+		JSONObject jsonObject = null ;
+		String uuid = "" ;
+		try {
+			jsonObject = new JSONObject(content);
+			uuid = jsonObject.getString("uuid") ;
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DeleteResponse response = client.prepareDelete(indexname, type, uuid).get();
 		// client.admin().indices().prepareDelete(indexname).execute().actionGet()
 		// ;
 		if (response.isFound())
