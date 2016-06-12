@@ -96,11 +96,12 @@ public class Consumer implements Runnable{
 	
 	public void run() {
 		DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("ConsumerGroupName") ;
-		consumer.setNamesrvAddr("192.168.1.107:9876") ;
+		consumer.setNamesrvAddr("192.168.1.125:9876") ;
 		consumer.setInstanceName("Consumer") ;
 		consumer.setMessageModel(MessageModel.CLUSTERING);
 		try {
 			consumer.subscribe("hospital", "*");
+			consumer.subscribe("resource", "*");
 		} catch (MQClientException e) {
 			e.printStackTrace();
 		}
@@ -112,25 +113,27 @@ public class Consumer implements Runnable{
 				
 				System.out.println(Thread.currentThread().getName() + "Receive New Massage:" + msgs.size());
 				for (MessageExt msg : msgs){
-					if (msg.getTopic().equals("hospital")) {
+					if ("hospital".equals(msg.getTopic()) || "resource".equals(msg.getTopic())) {
 						if ("add".equals(msg.getTags())) {
 							System.out.println(msg.getKeys());
 							String uuid = msg.getKeys() ;
 							byte[] temp = msg.getBody() ;
 							String content = new String(temp) ;
-							esHandler.createIndexResponse("zhiliao", "hospital", uuid, content) ;
+							esHandler.createIndexResponse("zhiliao", msg.getTopic(), uuid, content) ;
 							//Message message = new Message("hospital","add","reply",("OK").getBytes()) ;
 							//Producer.instance().send(msgs);
 						} else if ("update".equals(msg.getTags())) {
 							System.out.println(new String(msg.getBody())) ;
 							String uuid = msg.getKeys() ;
-							String content = msg.getBody().toString() ;
-							esHandler.update("zhiliao", "hospital", content) ;
+							byte[] temp = msg.getBody() ;
+							String content = new String(temp) ;
+							esHandler.update("zhiliao", msg.getTopic(), content) ;
 						} else if ("delete".equals(msg.getTags())) {
 							System.out.println(new String(msg.getBody())) ;
 							String uuid = msg.getKeys() ;
-							String content = msg.getBody().toString() ;
-							esHandler.delete("zhiliao", "hopital", content) ;
+							byte[] temp = msg.getBody() ;
+							String content = new String(temp) ;
+							esHandler.delete("zhiliao", msg.getTopic(), content) ;
 						}
 					} else {
 						return ConsumeConcurrentlyStatus.CONSUME_SUCCESS ;

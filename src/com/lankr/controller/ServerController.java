@@ -65,9 +65,13 @@ public class ServerController extends BaseController {
 	@ResponseBody
 	@RequestMapping("/api/search/hospital")
 	public List<HospitalVO> search(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-			throws UnsupportedEncodingException {
+			{
 		response.setHeader("Access-Control-Allow-Origin", "*");
-		request.setCharacterEncoding("UTF-8");
+		try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		response.setCharacterEncoding("UTF-8");
 
 		String keyword = request.getParameter("keyword");
@@ -259,7 +263,7 @@ public class ServerController extends BaseController {
 	@ResponseBody
 	@RequestMapping("/api/rebuild/all")
 	public String rebuildAll(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-			throws UnsupportedEncodingException {
+			{
 
 		esHandler.deleteIndex("zhiliao");
 		logger.info("all rebuild 时间 ：" + new SimpleDateFormat("YYYY-MM-dd HH:ss:mm").format(new Date()));
