@@ -325,21 +325,8 @@ public class ElasticSearchHandler {
 	}
 
 	public static void main(String[] args) throws IOException {
-//		ElasticSearchHandler esHandler = new ElasticSearchHandler();
-//		SpeakerVO speaker = new SpeakerVO() ;
-//		speaker.setId(12);
-//		speaker.setUuid("fkdahfkdfhkjdgfkdgfkf");
-//		speaker.setName("zhangsan");
-//		CategoryVO category = new CategoryVO(11,"fdasfhjkdsf","呼吸科") ;
-//		ResourceVO resource = new ResourceVO() ;
-//		resource.setId(99);
-//		resource.setUuid("fdsfdfhghj");
-//		resource.setName("这是一个测试视频");
-//		resource.setCode("fggfhghgh");
-//		resource.setMark("我们来测试这个视频");
-//		resource.setSpeaker(speaker);
-//		resource.setCategory(category);
-//		esHandler.createIndexResponse("zhiliao", "resource", resource.getUuid(), JsonUtil.obj2JsonData(resource));
-
+		ElasticSearchHandler es = new ElasticSearchHandler() ;
+		es.checkIndex("zhiliao");
+		CreateMapping.createMappingOnResource("zhiliao", "resource");
 	}
 }
