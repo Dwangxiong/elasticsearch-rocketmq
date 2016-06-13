@@ -92,7 +92,7 @@ public class Consumer implements Runnable{
 //		System.out.println("ConsumerStarted");
 	}
 
-	//消息接受以id:uuid:name:address的形式
+	//消息直接以json的格式来传递
 	
 	public void run() {
 		DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("ConsumerGroupName") ;

@@ -2,22 +2,39 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>知了查询</title>
+<style type="text/css">
+a:link {
+text-decoration: none;
+}
+a:visited {
+text-decoration: none;
+}
+a:hover {
+text-decoration: none;
+}
+a:active {
+text-decoration: none;
+}
+</style>
 </head>
 <body>
-	<button onclick="getESData()">点击吧</button><input type="text" id="keyword" name="keyword" /><br />
+	<button onclick="getESData()">搜素</button><input type="text" id="keyword" name="keyword" /><br />
 	<div id="data">
 	</div>
 	<script type="text/javascript" src="/js/jquery-2.1.1.js"></script>
 	<script type="text/javascript">
 		function getESData() {
-			alert(1);
 			var keyword = $('#keyword').val() ;
-			alert(keyword)
-			$.get('http://localhost:8899/api/search',{
+			$.get('http://localhost:8899/api/search/resource',{
 					keyword:keyword
 				},function(data){
-					console.log(data) ;
+					var content="";
+					$.each(data,function(index,item){
+						content += "<h4><a href=api/search/resource/{"+item.uuid+"}>"+item.name+"</a></h4>"+"<h5>"+item.mark+"</h5>"
+						+"<h5>讲者姓名："+item.speaker.name+"</h5>"+"<h5>板块："+item.category.name+"</h5>" ;
+					});
+					$("#data").html(content) ;
 				})
 		}
 	</script>
