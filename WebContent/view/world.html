@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+<meta charset="UTF-8">
+<title>知了查询</title>
+<style type="text/css">
+a:link {
+text-decoration: none;
+}
+a:visited {
+text-decoration: none;
+}
+a:hover {
+text-decoration: none;
+}
+a:active {
+text-decoration: none;
+}
+</style>
+</head>
+<body ng-controller="ResourceListController">
+	<button ng-click="getESData()">搜素</button><input type="text" ng-model="keyword"/><br />
+	<div ng-repeat="item in items">
+		<h4><a href="api/detail/{{item.uuid}}" ng-bind="item.name"></a></h4>
+		<h5 ng-bind="item.mark"></h5>
+		<h5 ng-bind="item.speaker.name"></h5>
+		<h5 ng-bind="item.category.name"></h5>
+	</div>
+	<script type="text/javascript" src="http://code.angularjs.org/angular-1.0.1.min.js"></script>
+	<script type="text/javascript">
+		function ResourceListController($scope,$http){
+			$scope.getESData = function(){
+				$http.get("http://localhost:8899/api/search/resource?keyword="+$scope.keyword).success(function(data,status,headers,config){
+					$scope.items=data ;	
+				})
+			}
+		}
+	</script>
+</body>
+</html>
