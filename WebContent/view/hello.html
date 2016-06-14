@@ -26,13 +26,12 @@ text-decoration: none;
 	<script type="text/javascript">
 		function getESData() {
 			var keyword = $('#keyword').val() ;
-			$.get('http://localhost:8899/api/search/resource',{
+			$.get('http://localhost:8899/api/search/hospital',{
 					keyword:keyword
 				},function(data){
 					var content="";
 					$.each(data,function(index,item){
-						content += "<h4><a href=api/search/resource/{"+item.uuid+"}>"+item.name+"</a></h4>"+"<h5>"+item.mark+"</h5>"
-						+"<h5>讲者姓名："+item.speaker.name+"</h5>"+"<h5>板块："+item.category.name+"</h5>" ;
+						content += "<h4><a href=api/search/resource/{"+item.uuid+"}>"+item.name+"</a></h4>"+"<h5>"+item.mark+"</h5>" ;
 					});
 					$("#data").html(content) ;
 				})

@@ -106,6 +106,7 @@ public class ServerController extends BaseController {
 						if (fieldName != null) {
 							Text[] texts = fieldName.fragments();
 							for (Text text : texts) {
+								System.out.println(text);
 								hv.setName(text.toString());
 							}
 						}

@@ -45,7 +45,7 @@ public class CreateMapping {
 			                    			.startObject("name").field("type", "string").field("store", "no").field("analyzer", "ik").field("searchAnalyzer", "ik").endObject()
 			                    			.startObject("createTime").field("type", "long").field("store", "no").endObject()
 					                    	.startObject("modifyTime").field("type", "long").field("store", "no").endObject()
-					                    	.startObject("_status").field("type", "integer").field("store", "no").field("analyzer", "ik").field("searchAnalyzer", "ik").endObject()
+					                    	.startObject("_status").field("type", "integer").field("store", "no").endObject()
 					                    	.startObject("mark").field("type", "string").field("store", "no").field("analyzer", "ik").field("searchAnalyzer", "ik").endObject()
 			                    		.endObject()
 			                    	.endObject()
