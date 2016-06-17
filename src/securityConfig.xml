@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.1.xsd"> 
+  
+  <!--登录页面不过滤 -->  
+  	<http security="none" pattern="/view/login.jsp" />
+  	<http security="none" pattern="/api/search/hospital" />
+  	<http security="none" pattern="/api/search/resource" />
+ 
+    <http auto-config="true" use-expressions="false">
+    	<session-management session-fixation-protection="none"/><!-- 此处如果不设置成功后会跳404 估计是因为session发生了改变 -->
+    	<form-login login-page="/view/login.jsp" username-parameter="username" login-processing-url="/login"
+    	password-parameter="password" default-target-url="/welcome"/>
+    	<!-- 此处的login-processing-url必须和自定义表单中的action一致才能正确跳转，否则能验证但是不能正确跳转 -->
+    	<intercept-url pattern="/**" access="ROLE_USER" /> 
+    	<!-- <custom-filter ref="myFilter" before="FILTER_SECURITY_INTERCEPTOR"/> -->
+    	<csrf disabled="true"/>
+    </http>
+    
+    <global-method-security jsr250-annotations="enabled"/>
+    <!-- <security:http access-denied-page="/accessDenied.jsp">  
+        <security:form-login login-page="/login.jsp" />  
+        访问/admin.jsp资源的用户必须具有ROLE_ADMIN的权限  
+        <intercept-url pattern="/admin.jsp" access="ROLE_ADMIN" />  
+        访问/**资源的用户必须具有ROLE_USER的权限  
+       
+        <security:session-management>  
+            <security:concurrency-control max-sessions="1"  
+                error-if-maximum-exceeded="false" />  
+        </security:session-management>  
+        增加一个filter，这点与 Acegi是不一样的，不能修改默认的filter了， 这个filter位于FILTER_SECURITY_INTERCEPTOR之前  
+        <security:custom-filter ref="myFilter" before="FILTER_SECURITY_INTERCEPTOR" />  
+    </security:http> -->  
+    <!--一个自定义的filter，必须包含 authenticationManager,accessDecisionManager,securityMetadataSource三个属性，   
+        我们的所有控制将在这三个类中实现，解释详见具体配置 -->  
+      
+    <!--验证配置，认证管理器，实现用户认证的入口，主要实现UserDetailsService接口即可 -->  
+    <authentication-manager>  
+        <authentication-provider user-service-ref="myUserDetailService"> 
+        	<!-- <user-service>
+        		<user name="lankr" password="123456" authorities="ROLE_USER"/>
+        	</user-service>  -->
+            <!--如果用户的密码采用加密的话 <password-encoder hash="md5" /> -->  
+        </authentication-provider>  
+    </authentication-manager>  
+    <!--在这个类中，你就可以从数据库中读入用户的密码，角色信息，是否锁定，账号是否过期等 -->  
+   
+	<!-- <beans:bean id="myFilter"  
+        class="com.lankr.spring.security.MyFilterSecurityInterceptor">  
+        <beans:property name="authenticationManager" ref="authenticationManager" />  
+        <beans:property name="accessDecisionManager" ref="myAccessDecisionManagerBean" />  
+        <beans:property name="securityMetadataSource" ref="securityMetadataSource" />  
+    </beans:bean>-->
+    <!-- 自定义userDetail 可以将所有的用户加载进来 -->
+     <beans:bean id="myUserDetailService" class="com.lankr.spring.security.MyUserDetailService" />  
+  <!--  访问决策器，决定某个用户具有的角色，是否有足够的权限去访问某个资源  
+    <beans:bean id="myAccessDecisionManagerBean"  
+        class="com.lankr.spring.security.MyAccessDecisionManager">  
+    </beans:bean>  
+    资源源数据定义，将所有的资源和权限对应关系建立起来，即定义某一资源可以被哪些角色访问  
+    <beans:bean id="securityMetadataSource"  
+        class="com.lankr.spring.security.MyInvocationSecurityMetadataSource" />  
+        
+    <beans:bean id="authenticationSuccess" class="com.lankr.spring.security.AuthenticationSuccessHandlerImpl"/>  -->
+            
+ </beans:beans>  

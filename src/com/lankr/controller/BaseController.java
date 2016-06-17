@@ -7,12 +7,14 @@ import java.util.List;
 import javax.servlet.ServletInputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.lankr.model.Hospital;
 import com.lankr.mybatis.mapper.HospitalMapper;
 import com.lankr.service.facade.HospitalMgrFacade;
 import com.lankr.service.facade.ResourceMgrFacade;
+import com.lankr.spring.security.MyUserDetailService;
 
 public class BaseController {
 	
@@ -26,6 +28,8 @@ public class BaseController {
 		return hospitals ;
 	}
 	
-	
+	public String getCurrentUsername() {
+		return SecurityContextHolder.getContext().getAuthentication().getName() ;
+	}
 	
 }

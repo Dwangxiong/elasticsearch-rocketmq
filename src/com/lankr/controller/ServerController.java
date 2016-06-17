@@ -34,6 +34,7 @@ import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.highlight.HighlightField;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -270,19 +271,29 @@ public class ServerController extends BaseController {
 		logger.info("all rebuild 时间 ：" + new SimpleDateFormat("YYYY-MM-dd HH:ss:mm").format(new Date()));
 		return "all is deleted ";
 	}
-
+	
+	@RequestMapping("/welcome")
+	public String login(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+		return "world" ;
+	}
+	
+	@RequestMapping("/login")
+	public String login1(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+		return "time" ;
+	}
+	
 	public static void main(String[] args) throws IOException {
-		String str = "{\"speaker\":\"{\"name\":\"zhangsan\",\"age\":123}}\"" ;
-		try {
-			JSONObject ob = new JSONObject(str);
-			String oo = ob.getString("speaker") ;
-			System.out.println("--------------" + oo + "-------------------");
-			JSONObject jj = new JSONObject(oo) ;
-			String name = jj.getString("name") ;
-			System.out.println("--------------" + name + "-------------------");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+//		String str = "{\"speaker\":\"{\"name\":\"zhangsan\",\"age\":123}}\"" ;
+//		try {
+//			JSONObject ob = new JSONObject(str);
+//			String oo = ob.getString("speaker") ;
+//			System.out.println("--------------" + oo + "-------------------");
+//			JSONObject jj = new JSONObject(oo) ;
+//			String name = jj.getString("name") ;
+//			System.out.println("--------------" + name + "-------------------");
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
 		
 	}
 

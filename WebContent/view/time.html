@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>知了时钟</title>
+<style type="text/css">
+a:link {
+text-decoration: none;
+}
+a:visited {
+text-decoration: none;
+}
+a:hover {
+text-decoration: none;
+}
+a:active {
+text-decoration: none;
+}
+</style>
+</head>
+<body>
+	<form>
+		<input type="button" value="开始计时" onclick="startTime()">
+		<input type="text" id="txt" disabled="true">
+		<input type="text" id="time" disabled="true">
+		<input type="button" value="停止计时" onclick="stopTime()">
+		<input type="button" value="重置" onclick="resetTime()">
+	</form>
+	<p>点击上面的”开始计时“按钮来启动计时器，输入框会一直进行计时，从0开始，点击“停止计时”按钮可以终止计时，点击“重置”按钮可以终止计时并将时间重置为0</p>
+	<script type="text/javascript">
+		var c = 0 ;
+		var t;
+		function startTime() {
+			document.getElementById("txt").value=c ;
+			c = c+1 ;
+			t=setTimeout("startTime()", 1000) ;
+		}
+		function stopTime() {
+			setTimeout("document.getElementById('txt').value=c-1",0) ;
+			clearTimeout(t) ;
+		}
+		function resetTime() {
+			setTimeout("document.getElementById('txt').value=0", 0) ;
+			c=0 ;
+			clearTimeout(t) ;
+		}
+		function startCheck() {
+			var today = new Date() ;
+			var h = today.getHours() ;
+			var m = today.getMinutes() ;
+			var s = today.getSeconds() ;
+			m = checkTime(m) ;
+			s = checkTime(s) ;
+			document.getElementById("time").value = h + ":" + m + ":" + s ;
+			var t = setTimeout("startCheck()", 500) ;
+		}
+		function checkTime(i) {
+			if (i<10) {
+				i = "0"+i;
+			}
+			return i
+		}
+		onload=startCheck ;
+	</script>
+</body>
+</html>
