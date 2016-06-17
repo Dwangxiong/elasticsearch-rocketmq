@@ -274,11 +274,23 @@ public class ServerController extends BaseController {
 	
 	@RequestMapping("/welcome")
 	public String login(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+		try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		response.setCharacterEncoding("UTF-8");
 		return "world" ;
 	}
 	
 	@RequestMapping("/login")
 	public String login1(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+		try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		response.setCharacterEncoding("UTF-8");
 		return "time" ;
 	}
 	

@@ -24,8 +24,8 @@ public class MyUserDetailService implements UserDetailsService{
 			user = new User(1,"lankr", "123456", true, auths) ;
 		}
 		if ("wang".equals(username)) {
-			auths.add(auth2) ;
-			user = new User(1,"wang", "123456", true, auths) ;
+			auths.add(auth1) ;
+			user = new User(2,"wang", "123456", true, auths) ;
 		}
 		return user;
 	}

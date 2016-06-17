@@ -13,14 +13,13 @@
     <http auto-config="true" use-expressions="false">
     	<session-management session-fixation-protection="none"/><!-- 此处如果不设置成功后会跳404 估计是因为session发生了改变 -->
     	<form-login login-page="/view/login.jsp" username-parameter="username" login-processing-url="/login"
-    	password-parameter="password" default-target-url="/welcome"/>
+    	password-parameter="password" authentication-success-handler-ref="customSuccessHandler" authentication-failure-url="/view/fail.html"/>
     	<!-- 此处的login-processing-url必须和自定义表单中的action一致才能正确跳转，否则能验证但是不能正确跳转 -->
     	<intercept-url pattern="/**" access="ROLE_USER" /> 
     	<!-- <custom-filter ref="myFilter" before="FILTER_SECURITY_INTERCEPTOR"/> -->
     	<csrf disabled="true"/>
     </http>
     
-    <global-method-security jsr250-annotations="enabled"/>
     <!-- <security:http access-denied-page="/accessDenied.jsp">  
         <security:form-login login-page="/login.jsp" />  
         访问/admin.jsp资源的用户必须具有ROLE_ADMIN的权限  
@@ -65,5 +64,5 @@
         class="com.lankr.spring.security.MyInvocationSecurityMetadataSource" />  
         
     <beans:bean id="authenticationSuccess" class="com.lankr.spring.security.AuthenticationSuccessHandlerImpl"/>  -->
-            
+    <beans:bean id="customSuccessHandler" class="com.lankr.spring.security.CustomSuccessHandler"/>   
  </beans:beans>  
