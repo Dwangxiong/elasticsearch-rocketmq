@@ -20,6 +20,7 @@ text-decoration: none;
 </head>
 <body ng-controller="ResourceListController">
 	<button ng-click="getESData()">搜素</button><input type="text" ng-model="keyword"/><br />
+	<h5><a href="/logout">注销</a></h5>
 	<div ng-repeat="item in items">
 		<h4><a href="api/detail/{{item.uuid}}" ng-bind="item.name"></a></h4>
 		<h5 ng-bind="item.mark"></h5>

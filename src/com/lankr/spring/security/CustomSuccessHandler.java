@@ -15,7 +15,14 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
+/**
+ * 此类控制登陆成功后的跳转
+ * @author Lankr
+ *
+ */
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 
 	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy() ;
@@ -23,7 +30,19 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 	@Override
 	protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 			throws IOException, ServletException {
-		String targetUrl = detemineTargetUrl(authentication) ;
+		//如果有拦截前的url登录成功后则跳转到之前的url，没有则进行不同角色的区分跳转
+		RequestCache requestCache = new HttpSessionRequestCache() ;
+		SavedRequest savedRequest = requestCache.getRequest(request, response) ;
+		String targetUrl = null ;
+		if (savedRequest == null) {
+			targetUrl = detemineTargetUrl(authentication) ;
+		} else {
+			targetUrl = savedRequest.getRedirectUrl() ;
+			System.out.println("================"+ targetUrl);
+			if (targetUrl != null && ("".equals(targetUrl) || targetUrl.contains("favicon.ico"))) { 
+				targetUrl = detemineTargetUrl(authentication) ;
+			}
+		}
 		
 		if (response.isCommitted()) {
 			System.out.println("Can't redirect!");

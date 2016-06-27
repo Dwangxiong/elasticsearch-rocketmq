@@ -13,11 +13,13 @@
     <http auto-config="true" use-expressions="false">
     	<session-management session-fixation-protection="none"/><!-- 此处如果不设置成功后会跳404 估计是因为session发生了改变 -->
     	<form-login login-page="/view/login.jsp" username-parameter="username" login-processing-url="/login"
-    	password-parameter="password" authentication-success-handler-ref="customSuccessHandler" authentication-failure-url="/view/fail.html"/>
+    	password-parameter="password" authentication-success-handler-ref="customSuccessHandler" authentication-failure-url="/view/login.jsp?error=true"/>
     	<!-- 此处的login-processing-url必须和自定义表单中的action一致才能正确跳转，否则能验证但是不能正确跳转 -->
     	<intercept-url pattern="/**" access="ROLE_USER" /> 
     	<!-- <custom-filter ref="myFilter" before="FILTER_SECURITY_INTERCEPTOR"/> -->
     	<csrf disabled="true"/>
+    	<!-- 可以对信息进行保存 -->
+    	<remember-me remember-me-parameter="remember-me" remember-me-cookie="remember-me" token-validity-seconds="60"/>
     </http>
     
     <!-- <security:http access-denied-page="/accessDenied.jsp">  
@@ -46,6 +48,7 @@
         </authentication-provider>  
     </authentication-manager>  
     <!--在这个类中，你就可以从数据库中读入用户的密码，角色信息，是否锁定，账号是否过期等 -->  
+   
    
 	<!-- <beans:bean id="myFilter"  
         class="com.lankr.spring.security.MyFilterSecurityInterceptor">  

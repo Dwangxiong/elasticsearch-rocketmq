@@ -34,7 +34,10 @@ import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.highlight.HighlightField;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -272,27 +275,36 @@ public class ServerController extends BaseController {
 		return "all is deleted ";
 	}
 	
-	@RequestMapping("/welcome")
-	public String login(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-		try {
-			request.setCharacterEncoding("UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		response.setCharacterEncoding("UTF-8");
-		return "world" ;
-	}
-	
-	@RequestMapping("/login")
-	public String login1(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-		try {
-			request.setCharacterEncoding("UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		response.setCharacterEncoding("UTF-8");
-		return "time" ;
-	}
+//	@RequestMapping("/welcome")
+//	public String login(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+//		try {
+//			request.setCharacterEncoding("UTF-8");
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		}
+//		response.setCharacterEncoding("UTF-8");
+//		return "world" ;
+//	}
+//	
+//	@RequestMapping("/login")
+//	public String login1(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+//		try {
+//			request.setCharacterEncoding("UTF-8");
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		}
+//		response.setCharacterEncoding("UTF-8");
+//		return "time" ;
+//	}
+//	
+//	@RequestMapping("/logout")
+//	public String logout (HttpServletRequest request, HttpServletResponse response) {
+//		Authentication auth = SecurityContextHolder.getContext().getAuthentication() ;
+//		if (auth != null) {
+//			new SecurityContextLogoutHandler().logout(request, response, auth);
+//		}
+//		return "login" ;
+//	}
 	
 	public static void main(String[] args) throws IOException {
 //		String str = "{\"speaker\":\"{\"name\":\"zhangsan\",\"age\":123}}\"" ;
