@@ -96,7 +96,7 @@ public class Consumer implements Runnable{
 	
 	public void run() {
 		DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("ConsumerGroupName") ;
-		consumer.setNamesrvAddr("192.168.1.125:9876") ;
+		consumer.setNamesrvAddr("192.168.1.127:9876") ;
 		consumer.setInstanceName("Consumer") ;
 		consumer.setMessageModel(MessageModel.CLUSTERING);
 		try {
@@ -115,7 +115,8 @@ public class Consumer implements Runnable{
 				for (MessageExt msg : msgs){
 					if ("hospital".equals(msg.getTopic()) || "resource".equals(msg.getTopic())) {
 						if ("add".equals(msg.getTags())) {
-							System.out.println(msg.getKeys());
+							System.out.println("消息类型add");
+							System.out.println(new String(msg.getBody()));
 							String uuid = msg.getKeys() ;
 							byte[] temp = msg.getBody() ;
 							String content = new String(temp) ;
@@ -123,12 +124,14 @@ public class Consumer implements Runnable{
 							//Message message = new Message("hospital","add","reply",("OK").getBytes()) ;
 							//Producer.instance().send(msgs);
 						} else if ("update".equals(msg.getTags())) {
+							System.out.println("消息类型update");
 							System.out.println(new String(msg.getBody())) ;
 							String uuid = msg.getKeys() ;
 							byte[] temp = msg.getBody() ;
 							String content = new String(temp) ;
 							esHandler.update("zhiliao", msg.getTopic(), content) ;
 						} else if ("delete".equals(msg.getTags())) {
+							System.out.println("消息类型delete");
 							System.out.println(new String(msg.getBody())) ;
 							String uuid = msg.getKeys() ;
 							byte[] temp = msg.getBody() ;

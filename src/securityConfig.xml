@@ -20,6 +20,9 @@
     	<csrf disabled="true"/>
     	<!-- 可以对信息进行保存 -->
     	<remember-me remember-me-parameter="remember-me" remember-me-cookie="remember-me" token-validity-seconds="60"/>
+    	<session-management>
+    		<concurrency-control max-sessions="1" error-if-maximum-exceeded="true" expired-url="/view/maxSessionError.html"/>
+    	</session-management>
     </http>
     
     <!-- <security:http access-denied-page="/accessDenied.jsp">  
@@ -39,6 +42,8 @@
         我们的所有控制将在这三个类中实现，解释详见具体配置 -->  
       
     <!--验证配置，认证管理器，实现用户认证的入口，主要实现UserDetailsService接口即可 -->  
+    
+    
     <authentication-manager>  
         <authentication-provider user-service-ref="myUserDetailService"> 
         	<!-- <user-service>
