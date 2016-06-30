@@ -68,8 +68,7 @@ public class ServerController extends BaseController {
 
 	@ResponseBody
 	@RequestMapping("/api/search/hospital")
-	public List<HospitalVO> search(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-			{
+	public List<HospitalVO> search(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		try {
 			request.setCharacterEncoding("UTF-8");
@@ -79,7 +78,7 @@ public class ServerController extends BaseController {
 		response.setCharacterEncoding("UTF-8");
 
 		String keyword = request.getParameter("keyword");
-		Gson gson = new Gson() ;
+		Gson gson = new Gson();
 		QueryBuilder queryBuilder = null;
 		List<HospitalVO> hospitalVOs = new ArrayList<HospitalVO>();
 		SearchHit[] searchHits = null;
@@ -90,9 +89,9 @@ public class ServerController extends BaseController {
 			searchHits = esHandler.searcher(queryBuilder, "zhiliao", "hospital");
 			if (searchHits.length > 0) {
 				for (SearchHit hit : searchHits) {
-					String data = hit.getSourceAsString() ;
-					HospitalVO hv = gson.fromJson(data, HospitalVO.class) ;
-					hospitalVOs.add(hv) ;
+					String data = hit.getSourceAsString();
+					HospitalVO hv = gson.fromJson(data, HospitalVO.class);
+					hospitalVOs.add(hv);
 				}
 			}
 		} else {
@@ -101,8 +100,8 @@ public class ServerController extends BaseController {
 			if (searchHits.length > 0) {
 				HospitalVO hospitalVO = new HospitalVO();
 				for (SearchHit hit : searchHits) {
-					String data = hit.getSourceAsString() ;
-					HospitalVO hv = gson.fromJson(data, HospitalVO.class) ;
+					String data = hit.getSourceAsString();
+					HospitalVO hv = gson.fromJson(data, HospitalVO.class);
 					Map<String, HighlightField> result = hit.highlightFields();
 					// System.out.println(result);
 					if (result != null) {
@@ -115,7 +114,7 @@ public class ServerController extends BaseController {
 							}
 						}
 					}
-					hospitalVOs.add(hv) ;
+					hospitalVOs.add(hv);
 				}
 			}
 		}
@@ -125,8 +124,7 @@ public class ServerController extends BaseController {
 
 	@ResponseBody
 	@RequestMapping("/api/search/resource")
-	public List<ResourceVO> searchResource(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			Object String) {
+	public List<ResourceVO> searchResource(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		try {
 			request.setCharacterEncoding("UTF-8");
@@ -137,7 +135,7 @@ public class ServerController extends BaseController {
 
 		String keyword = request.getParameter("keyword");
 
-		Gson gson = new Gson() ;
+		Gson gson = new Gson();
 		QueryBuilder queryBuilder = null;
 		List<ResourceVO> resourceVOs = new ArrayList<ResourceVO>();
 		SearchHit[] searchHits = null;
@@ -146,11 +144,11 @@ public class ServerController extends BaseController {
 			queryBuilder = QueryBuilders.matchAllQuery();
 			searchHits = esHandler.searcher(queryBuilder, "zhiliao", "resource");
 			if (searchHits.length > 0) {
-				ResourceVO resourceVO = new ResourceVO() ;
+				ResourceVO resourceVO = new ResourceVO();
 				for (SearchHit hit : searchHits) {
-					String data = hit.getSourceAsString() ;
-					ResourceVO rv = gson.fromJson(data, ResourceVO.class) ;
-					resourceVOs.add(rv) ;
+					String data = hit.getSourceAsString();
+					ResourceVO rv = gson.fromJson(data, ResourceVO.class);
+					resourceVOs.add(rv);
 				}
 			}
 		} else {
@@ -158,11 +156,11 @@ public class ServerController extends BaseController {
 					.operator(Operator.AND);
 			searchHits = esHandler.searcher(queryBuilder, "zhiliao", "resource");
 			if (searchHits.length > 0) {
-				ResourceVO resourceVO = new ResourceVO() ;
+				ResourceVO resourceVO = new ResourceVO();
 				for (SearchHit hit : searchHits) {
-					String data = hit.getSourceAsString() ;
-					
-					ResourceVO rv = gson.fromJson(data, ResourceVO.class) ;
+					String data = hit.getSourceAsString();
+
+					ResourceVO rv = gson.fromJson(data, ResourceVO.class);
 					Map<String, HighlightField> result = hit.highlightFields();
 					// System.out.println(result);
 					if (result != null) {
@@ -196,8 +194,8 @@ public class ServerController extends BaseController {
 							}
 						}
 					}
-					
-					resourceVOs.add(rv) ;
+
+					resourceVOs.add(rv);
 				}
 			}
 		}
@@ -255,7 +253,7 @@ public class ServerController extends BaseController {
 			Iterator iterator = resources.iterator();
 			while (iterator.hasNext()) {
 				Resource resource = (Resource) iterator.next();
-				String uuid = resource.getUuid() ;
+				String uuid = resource.getUuid();
 				esHandler.createIndexResponse("zhiliao", "resource", uuid, JsonUtil.obj2JsonData(resource));
 			}
 			resources = resourceMgrFacade.selectAllResource(id, 50);
@@ -267,49 +265,51 @@ public class ServerController extends BaseController {
 
 	@ResponseBody
 	@RequestMapping("/api/rebuild/all")
-	public String rebuildAll(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-			{
+	public String rebuildAll(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 
 		esHandler.deleteIndex("zhiliao");
 		logger.info("all rebuild 时间 ：" + new SimpleDateFormat("YYYY-MM-dd HH:ss:mm").format(new Date()));
 		return "all is deleted ";
 	}
-	
 
-//	
-//	@RequestMapping("/login")
-//	public String login1(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-//		try {
-//			request.setCharacterEncoding("UTF-8");
-//		} catch (UnsupportedEncodingException e) {
-//			e.printStackTrace();
-//		}
-//		response.setCharacterEncoding("UTF-8");
-//		return "time" ;
-//	}
-//	
-//	@RequestMapping("/logout")
-//	public String logout (HttpServletRequest request, HttpServletResponse response) {
-//		Authentication auth = SecurityContextHolder.getContext().getAuthentication() ;
-//		if (auth != null) {
-//			new SecurityContextLogoutHandler().logout(request, response, auth);
-//		}
-//		return "login" ;
-//	}
-	
+	//
+	// @RequestMapping("/login")
+	// public String login1(HttpServletRequest request, HttpServletResponse
+	// response, ModelMap model) {
+	// try {
+	// request.setCharacterEncoding("UTF-8");
+	// } catch (UnsupportedEncodingException e) {
+	// e.printStackTrace();
+	// }
+	// response.setCharacterEncoding("UTF-8");
+	// return "time" ;
+	// }
+	//
+	// @RequestMapping("/logout")
+	// public String logout (HttpServletRequest request, HttpServletResponse
+	// response) {
+	// Authentication auth =
+	// SecurityContextHolder.getContext().getAuthentication() ;
+	// if (auth != null) {
+	// new SecurityContextLogoutHandler().logout(request, response, auth);
+	// }
+	// return "login" ;
+	// }
+
 	public static void main(String[] args) throws IOException {
-//		String str = "{\"speaker\":\"{\"name\":\"zhangsan\",\"age\":123}}\"" ;
-//		try {
-//			JSONObject ob = new JSONObject(str);
-//			String oo = ob.getString("speaker") ;
-//			System.out.println("--------------" + oo + "-------------------");
-//			JSONObject jj = new JSONObject(oo) ;
-//			String name = jj.getString("name") ;
-//			System.out.println("--------------" + name + "-------------------");
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-		
+		// String str = "{\"speaker\":\"{\"name\":\"zhangsan\",\"age\":123}}\""
+		// ;
+		// try {
+		// JSONObject ob = new JSONObject(str);
+		// String oo = ob.getString("speaker") ;
+		// System.out.println("--------------" + oo + "-------------------");
+		// JSONObject jj = new JSONObject(oo) ;
+		// String name = jj.getString("name") ;
+		// System.out.println("--------------" + name + "-------------------");
+		// } catch (JSONException e) {
+		// e.printStackTrace();
+		// }
+
 	}
 
 }

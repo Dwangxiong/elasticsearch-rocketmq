@@ -11,7 +11,7 @@
   	<http security="none" pattern="/api/search/resource" />
  
     <http auto-config="true" use-expressions="false">
-    	<session-management session-fixation-protection="none"/><!-- 此处如果不设置成功后会跳404 估计是因为session发生了改变 -->
+    	<session-management session-fixation-protection="migrateSession"/><!-- 此处如果不设置成功后会跳404 估计是因为session发生了改变 -->
     	<form-login login-page="/view/login.jsp" username-parameter="username" login-processing-url="/login"
     	password-parameter="password" authentication-success-handler-ref="customSuccessHandler" authentication-failure-url="/view/login.jsp?error=true"/>
     	<!-- 此处的login-processing-url必须和自定义表单中的action一致才能正确跳转，否则能验证但是不能正确跳转 -->
@@ -20,8 +20,8 @@
     	<csrf disabled="true"/>
     	<!-- 可以对信息进行保存 -->
     	<remember-me remember-me-parameter="remember-me" remember-me-cookie="remember-me" token-validity-seconds="60"/>
-    	<session-management>
-    		<concurrency-control max-sessions="1" error-if-maximum-exceeded="true" expired-url="/view/maxSessionError.html"/>
+    	<session-management >
+    		<concurrency-control max-sessions="1" error-if-maximum-exceeded="false" expired-url="/view/maxSessionError.html"/>
     	</session-management>
     </http>
     
