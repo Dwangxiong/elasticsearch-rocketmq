@@ -26,12 +26,12 @@ public class MyInterceptor extends HandlerInterceptorAdapter {
 		String uri = request.getRequestURI() ;
 		System.out.println("----------------" + uri);
 		System.out.println(request.getRemoteAddr());
-		if ("/api/search".equals(uri)) {
+		if (uri != null && uri != "" && uri.contains("/api/search")) {
 			return super.preHandle(request, response, handler);
 		} else {
 			String ip = request.getHeader("Host") ;
 			System.out.println("----------------" + ip);
-			if ("localhost:8899".equals(ip) || "127.0.0.1:8899".equals(ip)) {
+			if ("localhost".equals(ip) || "127.0.0.1".equals(ip)) {
 				return super.preHandle(request, response, handler);
 			}
 			String attackIp= request.getHeader("X-Forwarded-For");  

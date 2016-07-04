@@ -21,7 +21,7 @@ public class JettyServer {
 		server.setThreadPool(threads);
 		Connector connector = new SelectChannelConnector();
 		// connector.setHost("127.0.0.1");
-		connector.setPort(8899);
+		connector.setPort(80);
 		server.setConnectors(new Connector[] { connector });
 		server.setSendDateHeader(false);
 		server.setSendServerVersion(false);
