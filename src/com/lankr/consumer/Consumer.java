@@ -96,7 +96,7 @@ public class Consumer implements Runnable{
 	
 	public void run() {
 		DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("ConsumerGroupName") ;
-		consumer.setNamesrvAddr("192.168.1.127:9876") ;
+		consumer.setNamesrvAddr("192.168.1.125:9876") ;
 		consumer.setInstanceName("Consumer") ;
 		consumer.setMessageModel(MessageModel.CLUSTERING);
 		try {
@@ -160,14 +160,4 @@ public class Consumer implements Runnable{
 		System.out.println("ConsumerStarted");
 	}
 	
-	private static Hospital parseString(String content) {
-		System.out.println(content);
-		String[] temp = content.split(":") ;
-		Hospital hospital = new Hospital() ;
-		hospital.setId(Integer.parseInt(temp[0])) ;
-		hospital.setUuid(temp[1]) ;
-		hospital.setName(temp[2]) ;
-		hospital.setAddress(temp[3]) ;
-		return hospital ;
-	}
 }
