@@ -41,6 +41,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -58,6 +59,7 @@ import com.lankr.vo.CityVO;
 import com.lankr.vo.HospitalVO;
 import com.lankr.vo.ProvinceVO;
 import com.lankr.vo.ResourceVO;
+import com.lankr.vo.ResourceVOList;
 import com.lankr.vo.SpeakerVO;
 
 @Controller
@@ -123,15 +125,15 @@ public class ServerController extends BaseController {
 	}
 
 	@ResponseBody
-	@RequestMapping("/api/search/resource")
-	public List<ResourceVO> searchResource(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+	@RequestMapping(value="/api/search/resource", method = RequestMethod.GET, produces = "text/json;charset=UTF-8")
+	public String searchResource(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		try {
 			request.setCharacterEncoding("UTF-8");
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 		}
-		response.setCharacterEncoding("UTF-8");
+		//response.setCharacterEncoding("UTF-8");
 
 		String keyword = request.getParameter("keyword");
 
@@ -200,7 +202,9 @@ public class ServerController extends BaseController {
 			}
 		}
 		System.out.println("search-------------------" + resourceVOs.size());
-		return resourceVOs;
+		ResourceVOList resourceVOList = new ResourceVOList() ;
+		resourceVOList.buildResource(resourceVOs);
+		return resourceVOList.toJSON() ;
 	}
 
 	@ResponseBody

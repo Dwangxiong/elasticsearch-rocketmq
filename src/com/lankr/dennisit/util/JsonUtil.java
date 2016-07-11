@@ -117,6 +117,7 @@ public class JsonUtil {
     		if (cover == null)
     			cover = "" ;
     		resourceVO.setCover(resource.getCoverTaskId());
+    		
     		Date createTime = resource.getCreateDate() ;
     		if (createTime == null)
     			resourceVO.setCreateTime(0);
@@ -139,7 +140,7 @@ public class JsonUtil {
     		resourceVO.setQr(qr);
     		resourceVO.setRank(resource.getRank());
     		resourceVO.setRate(resource.getRate());
-    		resourceVO.setType("");
+    		resourceVO.setType(resource.getType().name());
     		resourceVO.setUpdated_at(-1);
     		resourceVO.setUuid(resource.getUuid());
     		resourceVO.setViewCount(resource.getViewCount());

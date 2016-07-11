@@ -2,6 +2,7 @@ package com.lankr.model;
 
 import java.util.Date;
 
+
 public class Resource {
 	private int id;
 	private Date createDate;
@@ -193,5 +194,22 @@ public class Resource {
 	private int isActive;
 	private String mark;
 	private String code;
+	
+	public static enum Type {
+		PDF, NEWS, VIDEO, THREESCREEN, BROKEN
+	}
+	
+	public Type getType() {
+		if (assetId > 0) {
+			return Type.VIDEO;
+		} else if (pdfId > 0) {
+			return Type.PDF;
+		} else if (newsId > 0) {
+			return Type.NEWS;
+		} else if (threeScreenId > 0) {
+			return Type.THREESCREEN;
+		}
+		return Type.BROKEN;
+	}
 
 }
