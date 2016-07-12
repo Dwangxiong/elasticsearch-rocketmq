@@ -195,14 +195,14 @@ public class ElasticSearchHandler {
 		
 		SearchResponse searchResponse = null ;
 		if ("hospital".equals(type))
-			searchResponse = client.prepareSearch(indexname).setTypes(type).addHighlightedField("name").setHighlighterPreTags("<span style='color:red'>")
+			searchResponse = client.prepareSearch(indexname).setTypes(type).addHighlightedField("name").setHighlighterPreTags("<i class='result-mark'>")
 				// 此处可以设置返回数据的数量
-				.setHighlighterPostTags("</span>").setQuery(queryBuilder).setSize(50).execute().actionGet();
+				.setHighlighterPostTags("</i>").setQuery(queryBuilder).setSize(50).execute().actionGet();
 		else if ("resource".equals(type)) 
 			searchResponse = client.prepareSearch(indexname).setTypes(type).addHighlightedField("name").addHighlightedField("mark")
 				// 此处可以设置返回数据的数量
-				.addHighlightedField("speaker.name").addHighlightedField("category.name").setHighlighterPreTags("<span style='color:red'>")
-				.setHighlighterPostTags("</span>").setQuery(queryBuilder).setSize(50).execute().actionGet();
+				.addHighlightedField("speaker.name").addHighlightedField("category.name").setHighlighterPreTags("<i class='result-mark'>")
+				.setHighlighterPostTags("</i>").setQuery(queryBuilder).setSize(50).execute().actionGet();
 		SearchHits hits = searchResponse.getHits();
 		System.out.println("查询到记录数=" + hits.getTotalHits());
 		SearchHit[] searchHits = hits.getHits();
