@@ -96,7 +96,7 @@ public class Consumer implements Runnable{
 	
 	public void run() {
 		DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("ConsumerGroupName") ;
-		consumer.setNamesrvAddr("192.168.1.125:9876") ;
+		consumer.setNamesrvAddr("139.129.116.189:9876") ;
 		consumer.setInstanceName("Consumer") ;
 		consumer.setMessageModel(MessageModel.CLUSTERING);
 		try {

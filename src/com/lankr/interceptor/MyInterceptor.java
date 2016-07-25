@@ -31,7 +31,7 @@ public class MyInterceptor extends HandlerInterceptorAdapter {
 		} else {
 			String ip = request.getHeader("Host") ;
 			System.out.println("----------------" + ip);
-			if ("localhost".equals(ip) || "127.0.0.1".equals(ip)) {
+			if ("localhost:8888".equals(ip) || "127.0.0.1:8888".equals(ip)) {
 				return super.preHandle(request, response, handler);
 			}
 			String attackIp= request.getHeader("X-Forwarded-For");  

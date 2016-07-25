@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.index.query.MatchQueryBuilder.Operator;
 import org.elasticsearch.index.query.MatchQueryBuilder.ZeroTermsQuery;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder.Type;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
@@ -155,49 +157,51 @@ public class ServerController extends BaseController {
 			}
 		} else {
 			queryBuilder = QueryBuilders.multiMatchQuery(keyword, "speaker.name", "category.name", "name", "mark")
-					.operator(Operator.AND);
+					.type(MultiMatchQueryBuilder.Type.MOST_FIELDS) ;
 			searchHits = esHandler.searcher(queryBuilder, "zhiliao", "resource");
-			if (searchHits.length > 0) {
-				ResourceVO resourceVO = new ResourceVO();
-				for (SearchHit hit : searchHits) {
-					String data = hit.getSourceAsString();
-
-					ResourceVO rv = gson.fromJson(data, ResourceVO.class);
-					Map<String, HighlightField> result = hit.highlightFields();
-					// System.out.println(result);
-					if (result != null) {
-						HighlightField fieldName = result.get("name");
-						if (fieldName != null) {
-							Text[] texts = fieldName.fragments();
-							for (Text text : texts) {
-								rv.setName(text.toString());
+			if (searchHits != null) {
+				if (searchHits.length > 0) {
+					ResourceVO resourceVO = new ResourceVO();
+					for (SearchHit hit : searchHits) {
+						String data = hit.getSourceAsString();
+	
+						ResourceVO rv = gson.fromJson(data, ResourceVO.class);
+						Map<String, HighlightField> result = hit.highlightFields();
+						// System.out.println(result);
+						if (result != null) {
+							HighlightField fieldName = result.get("name");
+							if (fieldName != null) {
+								Text[] texts = fieldName.fragments();
+								for (Text text : texts) {
+									rv.setName(text.toString());
+								}
+							}
+							HighlightField fieldMark = result.get("mark");
+							if (fieldMark != null) {
+								Text[] texts = fieldMark.fragments();
+								for (Text text : texts) {
+									rv.setMark(text.toString());
+								}
+							}
+							HighlightField fieldSpeaker = result.get("speaker.name");
+							if (fieldSpeaker != null) {
+								Text[] texts = fieldSpeaker.fragments();
+								for (Text text : texts) {
+									System.out.println(text.toString());
+									rv.getSpeaker().setName(text.toString());
+								}
+							}
+							HighlightField fieldCategory = result.get("category.name");
+							if (fieldCategory != null) {
+								Text[] texts = fieldCategory.fragments();
+								for (Text text : texts) {
+									rv.getCategory().setName(text.toString());
+								}
 							}
 						}
-						HighlightField fieldMark = result.get("mark");
-						if (fieldMark != null) {
-							Text[] texts = fieldMark.fragments();
-							for (Text text : texts) {
-								rv.setMark(text.toString());
-							}
-						}
-						HighlightField fieldSpeaker = result.get("speaker.name");
-						if (fieldSpeaker != null) {
-							Text[] texts = fieldSpeaker.fragments();
-							for (Text text : texts) {
-								System.out.println(text.toString());
-								rv.getSpeaker().setName(text.toString());
-							}
-						}
-						HighlightField fieldCategory = result.get("category.name");
-						if (fieldCategory != null) {
-							Text[] texts = fieldCategory.fragments();
-							for (Text text : texts) {
-								rv.getCategory().setName(text.toString());
-							}
-						}
+	
+						resourceVOs.add(rv);
 					}
-
-					resourceVOs.add(rv);
 				}
 			}
 		}
